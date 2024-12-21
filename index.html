@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jogo Labirinto</title>
+  </head>
+
+  <body>
+
+    <!-- O Phaser tem que ser iniciado primeiro para ficar na memória. -->
+    <script src="node_modules/phaser/dist/phaser.min.js"></script>
+    <script src="js/boot.js"></script>
+    <script src="js/load.js"></script>
+    <script src="js/menu.js"></script>
+    <script src="js/stage1.js"></script>
+    <script src="js/stage2.js"></script>
+    <script src="js/end.js"></script>
+    <!-- O game por último, pois tudo já tem que estar na memória para ser instanciados no "game.js" -->
+    <script src="js/game.js"></script>
+  </body>
+</html>
