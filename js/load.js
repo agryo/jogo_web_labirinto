@@ -61,7 +61,7 @@ var loadState = {
     // E aqui fica o carregamento dos Áudios do jogo
     game.load.audio('getitem', 'assets/getitem.ogg');
     game.load.audio('loseitem', 'assets/loseitem.ogg');
-    game.load.audio('music', 'assets/music.ogg');
+    game.load.audio('musica', 'assets/music.ogg');
   },
 
   /*

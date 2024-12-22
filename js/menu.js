@@ -3,12 +3,12 @@ var menuState = {
     Agora todos os componentes já foram carregados na memória, não precisa mais do "preload".
     Vamos direto para o "create".
   */
-  create: function () {
+  create: function() {
     /*
       Iniciar a música do jogo.
       Variável Global "music" do "manuState" usando o "this" para isso.
     */
-    this.music = game.add.audio('music');
+    this.music = game.add.audio('musica');
     // Informa que a música vai ficar repetindo em "loop"
     this.music.loop = true;
     // Informa a altura do som da música do menu será de 50%.
