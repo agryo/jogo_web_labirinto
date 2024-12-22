@@ -5,9 +5,9 @@ var loadState = {
       A variável "txtLoading" vai receber o "game.add.text" Game, Adicionar, Texto.
       E dentro dos parenteses tem os parametros de Eixo X, Eixo Y, Texto a ser exibido e Objeto da formatação do texto.
    */
-    const txtLoading = game.add.text(game.world.centerX, 150, "CARREGANDO...", {
-      font: "15px emulogic",
-      fill: "#fff",
+    const txtLoading = game.add.text(game.world.centerX, 150, 'CARREGANDO...', {
+      font: '15px emulogic',
+      fill: '#fff',
     });
     txtLoading.anchor.set(0.5); // Centraliza no meio do próprio eixo em si
 
@@ -20,7 +20,7 @@ var loadState = {
       O Eixo Y fica a 250px.
       E por fim qual a imagem foi carregada lá no "load".
    */
-    var progressBar = game.add.sprite(game.world.centerX, 250, "progressBar");
+    var progressBar = game.add.sprite(game.world.centerX, 250, 'progressBar');
 
     /* 
       Aqui está definindo o ponto de ancoragem da imagem no centro dela mesma.
@@ -43,10 +43,10 @@ var loadState = {
       E no segundo é o caminho da imagem, também com aspas simples.
       O "ID" é como será usada a imagem no restante do código, sem precisar colocar novamente o caminho.
    */
-    game.load.image("bg", "img/bg.png");
-    game.load.image("block", "img/block.png");
-    game.load.image("end", "img/end.png");
-    game.load.image("part", "img/part.png");
+    game.load.image('bg', 'img/bg.png');
+    game.load.image('block', 'img/block.png');
+    game.load.image('end', 'img/end.png');
+    game.load.image('part', 'img/part.png');
 
     /* 
       Aqui os Sprites Sheets (animações)
@@ -54,20 +54,20 @@ var loadState = {
       de imagem das várias que formam a animação pois elas serão exibidas individualmente claro.
       Primeiro "Largura" depois "Altura".
    */
-    game.load.spritesheet("coin", "img/coin.png", 32, 32);
-    game.load.spritesheet("enemy", "img/enemy.png", 24, 40);
-    game.load.spritesheet("player", "img/player.png", 24, 32);
+    game.load.spritesheet('coin', 'img/coin.png', 32, 32);
+    game.load.spritesheet('enemy', 'img/enemy.png', 24, 40);
+    game.load.spritesheet('player', 'img/player.png', 24, 32);
 
     // E aqui fica o carregamento dos Áudios do jogo
-    game.load.audio("getitem", "assets/getitem.ogg");
-    game.load.audio("loseitem", "assets/loseitem.ogg");
-    game.load.audio("music", "assets/music.ogg");
+    game.load.audio('getitem', 'assets/getitem.ogg');
+    game.load.audio('loseitem', 'assets/loseitem.ogg');
+    game.load.audio('music', 'assets/music.ogg');
   },
 
   /*
       Aqui o método "create" chama o próximo State que nesse caso é o Menu Principal
   */
   create: function () {
-    game.state.start("menu");
+    game.state.start('menu');
   },
 };
