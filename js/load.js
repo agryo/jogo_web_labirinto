@@ -62,6 +62,9 @@ var loadState = {
     game.load.audio('getitem', 'assets/getitem.ogg');
     game.load.audio('loseitem', 'assets/loseitem.ogg');
     game.load.audio('music', 'assets/music.ogg');
+
+    // Agora ativa a física do jogo para movimentar o jogador.
+    game.physics.startSystem(Phaser.Physics.ARCADE);
   },
 
   /*
