@@ -8,7 +8,7 @@ var menuState = {
       Iniciar a música do jogo.
       Variável Global "music" do "manuState" usando o "this" para isso.
     */
-    this.music = game.add.audio('musica');
+    this.music = game.add.audio('music');
     // Informa que a música vai ficar repetindo em "loop"
     this.music.loop = true;
     // Informa a altura do som da música do menu será de 50%.
@@ -28,7 +28,7 @@ var menuState = {
       Agora o texto do "Pressione ENTER" que terá uma animação subindo de baixo da tela.
       Ele irá começar fora da tela no Eixo Y em "550" e vai subir para o ponto de anchoragem.
     */
-    const txtPressButton = game.add.text(game.world.centerX, 550, 'PRESSIONE ENTER', { font: '20px emulogic', fill: '#fff' });
+    var txtPressButton = game.add.text(game.world.centerX, 550, 'PRESSIONE ENTER', { font: '20px emulogic', fill: '#fff' });
     txtPressButton.anchor.set(0.5);
 
     /*

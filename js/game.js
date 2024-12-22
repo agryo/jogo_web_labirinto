@@ -1,5 +1,5 @@
 // Variável "game" recebe um "new" Phaser.Game com as dimensões 750px por 500px e renderização "CANVAS" do Phaser
-var game = new Phaser.Game(750,500,Phaser.CANVAS);
+var game = new Phaser.Game(750,500,Phaser.AUTO);
 
     // Aqui estou instanciando todos os códigos que vão ser usados.
     // O "game", a variável que já foi criada, "state.add" adicionando o State com o nome entre aspas simples e o

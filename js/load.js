@@ -5,7 +5,7 @@ var loadState = {
       A variável "txtLoading" vai receber o "game.add.text" Game, Adicionar, Texto.
       E dentro dos parenteses tem os parametros de Eixo X, Eixo Y, Texto a ser exibido e Objeto da formatação do texto.
    */
-    const txtLoading = game.add.text(game.world.centerX, 150, 'CARREGANDO...', {
+    var txtLoading = game.add.text(game.world.centerX, 150, 'CARREGANDO...', {
       font: '15px emulogic',
       fill: '#fff',
     });
@@ -61,7 +61,7 @@ var loadState = {
     // E aqui fica o carregamento dos Áudios do jogo
     game.load.audio('getitem', 'assets/getitem.ogg');
     game.load.audio('loseitem', 'assets/loseitem.ogg');
-    game.load.audio('musica', 'assets/music.ogg');
+    game.load.audio('music', 'assets/music.ogg');
   },
 
   /*
