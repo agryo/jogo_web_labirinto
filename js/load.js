@@ -1,14 +1,17 @@
 var loadState = {
   preload: function () {
-   /*
+    /*
       Adicionar o texto com o "Carregando".
       A variável "txtLoading" vai receber o "game.add.text" Game, Adicionar, Texto.
       E dentro dos parenteses tem os parametros de Eixo X, Eixo Y, Texto a ser exibido e Objeto da formatação do texto.
    */
-   const txtLoading = game.add.text(game.world.centerX,150,'CARREGANDO...',{font:'15px emulogic',fill:'#fff'});
-   txtLoading.anchor.set(.5); // Centraliza no meio do próprio eixo em si
+    const txtLoading = game.add.text(game.world.centerX, 150, "CARREGANDO...", {
+      font: "15px emulogic",
+      fill: "#fff",
+    });
+    txtLoading.anchor.set(0.5); // Centraliza no meio do próprio eixo em si
 
-   /*   
+    /*   
       Esse "preload" cria a variável da imagem instanciada anteriormente.
       A variável "progressBar" recebe do "game" adicionando "add" um Sprite do jogo que é a imagem
       já carregada no "load".
@@ -45,11 +48,12 @@ var loadState = {
     game.load.image("end", "img/end.png");
     game.load.image("part", "img/part.png");
 
-    /* Aqui os Sprites Sheets (animações)
-               A principal diferença é que além do "ID" e do "Caminho", será preciso dizer o tamanho de cada bloco
-               de imagem das várias que formam a animação pois elas serão exibidas individualmente claro.
-               Primeiro "Largura" depois "Altura".
-            */
+    /* 
+      Aqui os Sprites Sheets (animações)
+      A principal diferença é que além do "ID" e do "Caminho", será preciso dizer o tamanho de cada bloco
+      de imagem das várias que formam a animação pois elas serão exibidas individualmente claro.
+      Primeiro "Largura" depois "Altura".
+   */
     game.load.spritesheet("coin", "img/coin.png", 32, 32);
     game.load.spritesheet("enemy", "img/enemy.png", 24, 40);
     game.load.spritesheet("player", "img/player.png", 24, 32);
@@ -58,5 +62,12 @@ var loadState = {
     game.load.audio("getitem", "assets/getitem.ogg");
     game.load.audio("loseitem", "assets/loseitem.ogg");
     game.load.audio("music", "assets/music.ogg");
+  },
+
+  /*
+      Aqui o método "create" chama o próximo State que nesse caso é o Menu Principal
+  */
+  create: function () {
+    game.state.start("menu");
   },
 };
