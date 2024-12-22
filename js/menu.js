@@ -28,7 +28,7 @@ var menuState = {
       Agora o texto do "Pressione ENTER" que terá uma animação subindo de baixo da tela.
       Ele irá começar fora da tela no Eixo Y em "550" e vai subir para o ponto de anchoragem.
     */
-    var txtPressButton = game.add.text(game.world.centerX, 550, 'PRESSIONE ENTER', { font: '20px emulogic', fill: '#fff' });
+    const txtPressButton = game.add.text(game.world.centerX, 550, 'PRESSIONE ENTER', { font: '20px emulogic', fill: '#fff' });
     txtPressButton.anchor.set(0.5);
 
     /*
