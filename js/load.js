@@ -5,10 +5,7 @@ var loadState = {
       A variável "txtLoading" vai receber o "game.add.text" Game, Adicionar, Texto.
       E dentro dos parenteses tem os parametros de Eixo X, Eixo Y, Texto a ser exibido e Objeto da formatação do texto.
    */
-    var txtLoading = game.add.text(game.world.centerX, 150, 'CARREGANDO...', {
-      font: '15px emulogic',
-      fill: '#fff',
-    });
+    var txtLoading = game.add.text(game.world.centerX, 150, 'CARREGANDO...', { font: '15px emulogic', fill: '#fff' });
     txtLoading.anchor.set(0.5); // Centraliza no meio do próprio eixo em si
 
     /*   
@@ -58,6 +55,10 @@ var loadState = {
     game.load.spritesheet('enemy', 'img/enemy.png', 24, 40);
     game.load.spritesheet('player', 'img/player.png', 24, 32);
 
+    // Carrega as músicas do jogo
+    game.load.audio('somstage1', 'assets/bootsst1.ogg');
+    game.load.audio('somstage2', 'assets/dancedubberst2.ogg')
+
     // E aqui fica o carregamento dos Áudios do jogo
     game.load.audio('getitem', 'assets/getitem.ogg');
     game.load.audio('loseitem', 'assets/loseitem.ogg');
@@ -72,5 +73,5 @@ var loadState = {
   */
   create: function () {
     game.state.start('menu');
-  },
+  }
 };

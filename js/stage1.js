@@ -1,5 +1,23 @@
 var stage1State = {
   create: function () {
+    /*
+      Iniciar a música do jogo.
+      Variável Global "music" do "manuState" usando o "this" para isso.
+    */
+    this.music = game.add.audio('somstage1');
+    // Informa que a música vai ficar repetindo em "loop"
+    this.music.loop = true;
+    // Informa a altura do som da música do menu será de 50%.
+    this.music.volume = .5;
+    // Inicia a música após as configurações.
+    this.music.play();
+    // Carrega o som do jogo ao pegar o item.
+    this.somCoin = game.add.audio('getitem');
+    this.somCoin.volume = .5;
+    // Carrega o som de quando perde moedas.
+    this.somLoseCoin = game.add.audio('loseitem');
+    this.somLoseCoin.volume = .5;
+
     // Adiciona a imagem de fundo no Stage, Eixo X e Y com "0" para preencher tudo e "bg" é a imagem já carregada.
     game.add.sprite(0, 0, "bg");
 
@@ -137,6 +155,20 @@ var stage1State = {
       ".input" no jogo "game".
     */
     this.controls = game.input.keyboard.createCursorKeys();
+
+    /*
+      Criação do emissor das partículas da explosão
+      Aqui a variável "emitter" recebe o emissor ".emitter()"  e adiciona ".add" ao jogo "game".
+      Parametros -> "( )": Eixo X, Eixo Y e Quantidade máxima de partículas.
+    */
+    this.emitter = game.add.emitter(0, 0, 15);
+    // Adiciona a imagem a ser usada nas partículas.
+    this.emitter.makeParticles('part');
+    // Configura a valocidade das partículas nos Eixos X e Y. De "-50" ate "50" de velocidade, dentro da célula.
+    this.emitter.setXSpeed(-50, 50);
+    this.emitter.setYSpeed(-50, 50);
+    // E configura para elas não serem afetadas pela gravidade.
+    this.emitter.gravity.y = 0;
   },
 
   update: function () {
@@ -149,6 +181,8 @@ var stage1State = {
       Não vai ter condição para disparar a função então usa "null" e o "this" é o contexto da função.
     */
     game.physics.arcade.overlap(this.player, this.coin, this.getCoin, null, this);
+    // Informa que o Inimigo pode ter contato com o jogador para roubar moedas.
+    game.physics.arcade.overlap(this.player, this.inimigo, this.loseCoin, null, this);
 
     // Inicia a função de movimentação do Inimigo.
     this.moveInimigo();
@@ -167,7 +201,7 @@ var stage1State = {
         // Cria as variáveis de coordenadas do inimigo em linha e coluna.
         var colInimigo = Math.floor(this.inimigo.x / 50);
         var rowInimigo = Math.floor(this.inimigo.y / 50);
-        // Cria uma Array de possíveis direções a serem seguidas.
+        // Cria uma Array de possíveis direções a serem seguidas, para o inimigo.
         var validPath = [];
 
         /*
@@ -222,12 +256,44 @@ var stage1State = {
     Ela irá "coletar" a moeda, aumentar o valor da contagem e inserir outra moeda em outro local.
   */
   getCoin: function () {
+    // Guarda as coordenadas da moeda para emitir as particulas dela.
+    this.emitter.x = this.coin.position.x;
+    this.emitter.y = this.coin.position.y;
+    // Depois emite as partículas da moeda. 
+    // Parametros "( )": Gerar todas ao mesmo tempo "true", Duração, Intervalo (caso gerar seja "false") e Quantidade.
+    this.emitter.start(true, 500, null, 15);
+
+    // Toca o som da moeda ao pegar ela.
+    this.somCoin.play();
     // Adiciona mais "1" a variável do contador
     this.coins++;
     // Atualiza o contador visual no jogo.
     this.txtCoins.text = 'MOEDAS: ' + this.getText(this.coins);
     // Reposiciona a nova moeda no mapa
     this.coin.position = this.newPosition();
+  },
+
+  /*
+    Função da perca das moedas para o inimigo
+    Ela irá "tomar" as moedas, diminuindo o valor da contagem ao tocar no inimigo.
+  */
+  loseCoin: function () {
+    // Toca o som de quando perde as moedas.
+    this.somLoseCoin.play();
+    // Agora verifica SE tem moedas e caso tenha executa a açao de perca das moedas.
+    if (this.coins > 0) {
+      // Guarda as coordenadas do jogador para emitir as particulas dele.
+      this.emitter.x = this.player.position.x;
+      this.emitter.y = this.player.position.y;
+      // Depois emite as partículas do personagem. 
+      // Parametros "( )": Gerar todas ao mesmo tempo "true", Duração, Intervalo (caso gerar seja "false") e Quantidade.
+      this.emitter.start(true, 500, null, 15);
+
+      // Zera as moedas, perde todas as moedas.
+      this.coins = 0;
+      // E atualiza o contados das moedas.
+      this.txtCoins.text = 'MOEDAS: ' + this.getText(this.coins);
+    }
   },
 
   /*
