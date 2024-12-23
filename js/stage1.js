@@ -4,12 +4,12 @@ var stage1State = {
     game.add.sprite(0, 0, "bg");
 
     /*
-          Esse é o Mapa da fase, uma matriz onde os números são blocos e as linhas são outras celulas (matrizes).
-          0 = Representa os espaços onde se caminha, aberto.
-          1 = Representa os blocos fechados, paredes.
-          2 = Representa onde o Jogador irá começar.
-          3 = Representa onde as moedas irão aparecer.
-        */
+      Esse é o Mapa da fase, uma matriz onde os números são blocos e as linhas são outras celulas (matrizes).
+      0 = Representa os espaços onde se caminha, aberto.
+      1 = Representa os blocos fechados, paredes.
+      2 = Representa onde o Jogador irá começar.
+      3 = Representa onde as moedas irão aparecer.
+    */
     this.mapa = [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
       [1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1],
@@ -31,13 +31,13 @@ var stage1State = {
     this.coinPositions = [];
 
     /*
-          O "FOR" vai percorrer a matriz para detectar os números para em seguida montar o mapa.
-          Primeiro ele percorre as linhas "row" no mapa "this.mapa".
-          Depois ele percorre as colunas "col" na linha do mapa "this.mapa[row]".
-          Durante a detecção ele cria a variável "tile" que recebe a linha e coluna do mapa.
-          Cria as variáveis de "X" e "Y" para informar o tamanho dos blocos que serão 50px (multiplica por 50).
-          E finalmente monta o mapa com o "IF" onde se o "tile" for igual a "1" o "block" recebe os dados.
-        */
+      O "FOR" vai percorrer a matriz para detectar os números para em seguida montar o mapa.
+      Primeiro ele percorre as linhas "row" no mapa "this.mapa".
+      Depois ele percorre as colunas "col" na linha do mapa "this.mapa[row]".
+      Durante a detecção ele cria a variável "tile" que recebe a linha e coluna do mapa.
+      Cria as variáveis de "X" e "Y" para informar o tamanho dos blocos que serão 50px (multiplica por 50).
+      E finalmente monta o mapa com o "IF" onde se o "tile" for igual a "1" o "block" recebe os dados.
+    */
     for (var row in this.mapa) {
       for (var col in this.mapa[row]) {
         var tile = this.mapa[row][col];
@@ -60,10 +60,10 @@ var stage1State = {
           // Ativa a movimentação do jogador já carregada no "load"
           game.physics.arcade.enable(this.player);
           /*
-                      Criar a animação do personagem movimentando para todas as direções.
-                      Adicione ".add" as Animações ".animations" ao Personagem "this.player"
-                      Entre os parenteses são a ID "goDown", Array das Imagens, Velocidade e Loop ativo "true".
-                    */
+            Criar a animação do personagem movimentando para todas as direções.
+            Adicione ".add" as Animações ".animations" ao Personagem "this.player"
+            Entre os parenteses são a ID "goDown", Array das Imagens, Velocidade e Loop ativo "true".
+          */
           this.player.animations.add("goDown", [0, 1, 2, 3, 4, 5, 6, 7], 12, true);
           this.player.animations.add("goUp", [8, 9, 10, 11, 12, 13, 14, 15], 12, true);
           this.player.animations.add("goLeft", [16, 17, 18, 19, 20, 21, 22, 23], 12, true);
@@ -94,12 +94,24 @@ var stage1State = {
    this.coin = game.add.sprite(this.coin.position.x, this.coin.position.y, 'coin');
    // Centraliza no próprio eixo
    this.coin.anchor.set(.5);
-   /* 
-     Adiciona a animação da moeda.
-     Adicione ".add" a Animação ".animations" à Moeda "this.coin" e inicie a reprodução ".play()".
-     Entre os parenteses são a ID "spin", o Array de cada imagem (recortes), a velocidade "10" e ativar Loop "true".
-   */
+    /* 
+      Adiciona a animação da moeda.
+      Adicione ".add" a Animação ".animations" à Moeda "this.coin" e inicie a reprodução ".play()".
+      Entre os parenteses são a ID "spin", o Array de cada imagem (recortes), a velocidade "10" e ativar Loop "true".
+    */
    this.coin.animations.add('spin', [0,1,2,3,4,5,6,7,8,9], 10, true).play();
+   // Adionar a física a moeda para ela ser pegável, colidida.
+   game.physics.arcade.enable(this.coin);
+
+   /*
+     Coletar moedas
+     Primeiro cria a variável zerada com a quantidade de moedas coletadas.
+     Depois cria a variável que irá exibir o texto das moedas no jogo.
+     Recebendo o texto ".text" adiciona ".add" ao jogo "game".
+     Entre os parenteses os parametros, Eixo X, Eixo Y, Texto concatenado a variável "this.coins" e estilo da fonte.
+   */
+    this.coins = 0;
+    this.txtCoins = game.add.text(15, 15, 'MOEDAS: ' + this.getText(this.coins), {font: '15px emulogic', fill: '#fff'});
 
     /*
       Controles Movimentação
@@ -112,8 +124,49 @@ var stage1State = {
   update: function () {
     // Agora informa que os blocos e o jogador podem colidir entre si.
     game.physics.arcade.collide(this.player, this.blocks);
+    /* 
+      Agora informa que o jogador pode coletar as moedas. O "overlap" verifica se estão ocupando o mesmo espaço.
+      Entre os parenteses os parametros são:
+      Objeto1 a ser verificado se estão no mesmo espaço, Objeto2 da  verificação, Função para executar, Condição "null".
+      Não vai ter condição para disparar a função então usa "null" e o "this" é o contexto da função.
+    */
+    game.physics.arcade.overlap(this.player, this.coin, this.getCoin, null, this);
 
+    // Inicia a função de movimentação do jogador.
     this.movePlayer();
+  },
+
+  /*
+    Função da coleta das moedas
+    Ela irá "coletar" a moeda, aumentar o valor da contagem e inserir outra moeda em outro local.
+  */
+  getCoin: function () {
+    // Adiciona mais "1" a variável do contador
+    this.coins++;
+    // Atualiza o contador visual no jogo.
+    this.txtCoins.text = 'MOEDAS: ' + this.getText(this.coins);
+    // Reposiciona a nova moeda no mapa
+    this.coin.position = this.newPosition();
+  },
+
+  /*
+    Função que gera os textos do jogo
+    Ela irá receber um valor, da contagem por exemplo, e vai verificar quantos digitos tem, pois vão ter sempre 3 digitos.
+    Ao verificar quantos digitos tem, ela irá preencher o restante com zeros até ficar com 3 digitos.
+  */
+  getText: function (valor) {
+    // Se o valor for menor que "10"
+    if (valor < 10) {
+        // Retorna dois zeros mais o valor atual.
+        return '00' + valor.toString();
+    }
+    // Se o valor for menor que "10"
+    if (valor < 100) {
+        // Retorna um zero mais o valor atual.
+        return '0' + valor.toString();
+    }
+    // Se não for nenhuma dos acima, retorna apenas o valor atual.
+    return valor.toString();
   },
 
   /*
