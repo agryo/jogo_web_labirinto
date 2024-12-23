@@ -27,6 +27,8 @@ var stage1State = {
     this.blocks = game.add.group();
     // Agora ativa o corpo físico dos blocos para serem colididos.
     this.blocks.enableBody = true;
+    // Array para as possíveis posições das moedas
+    this.coinPositions = [];
 
     /*
           O "FOR" vai percorrer a matriz para detectar os números para em seguida montar o mapa.
@@ -67,14 +69,43 @@ var stage1State = {
           this.player.animations.add("goLeft", [16, 17, 18, 19, 20, 21, 22, 23], 12, true);
           this.player.animations.add("goRight", [24, 25, 26, 27, 28, 29, 30, 31], 12, true);
         }
+        // Depois adiciona as possíveis posições onde as moedas irão aparecer caso seja igual a "3".
+        else if (tile === 3) {
+            // Váriável que receberá um objeto com as coordenadas das posições em X e Y.
+            var position = {
+                // X e Y "+ 25" pois são o centro da célula.
+                x: x + 25,
+                y: y + 25
+            };
+            // Em seguida adiciona as posiçõoes ao Array criado mais acima.
+            this.coinPositions.push(position);
+        }
       }
     }
 
     /*
-          Controles Movimentação
-          Aqui a variável "controls" recebe as teclas de setas ".createCursorKeys()"  do teclado ".keyboard" de entrada
-          ".input" no jogo "game".
-        */
+      Criar as Moedas no Jogo
+      Primeira cria o Objeto das Moedas.
+      Depois adiciona a nova posição no item do objeto ".position" da moeda recebendo a função criada "newPosition()".
+    */
+   this.coin = {};
+   this.coin.position = this.newPosition();
+   // Adiciona a moeda ao jogo recebendo a posição em X, posição em Y e a imagem da moeda "coin".
+   this.coin = game.add.sprite(this.coin.position.x, this.coin.position.y, 'coin');
+   // Centraliza no próprio eixo
+   this.coin.anchor.set(.5);
+   /* 
+     Adiciona a animação da moeda.
+     Adicione ".add" a Animação ".animations" à Moeda "this.coin" e inicie a reprodução ".play()".
+     Entre os parenteses são a ID "spin", o Array de cada imagem (recortes), a velocidade "10" e ativar Loop "true".
+   */
+   this.coin.animations.add('spin', [0,1,2,3,4,5,6,7,8,9], 10, true).play();
+
+    /*
+      Controles Movimentação
+      Aqui a variável "controls" recebe as teclas de setas ".createCursorKeys()"  do teclado ".keyboard" de entrada
+      ".input" no jogo "game".
+    */
     this.controls = game.input.keyboard.createCursorKeys();
   },
 
@@ -110,7 +141,7 @@ var stage1State = {
       // Criar a subfunção de direção que não existe para adicionar as direções "direction".
       this.player.direction = "right";
     }
-    
+
     // Se o "controls" seta cima "up" estiver pressionada "isDown" e (&&) da baixo não ("!" negação).
     if (this.controls.up.isDown && !this.controls.down.isDown) {
       // O jogador "this.player" move o corpo ".body" na velocidade ".velocity" do Eixo Y ".y" a velocidade "-100".
@@ -127,13 +158,13 @@ var stage1State = {
     }
 
     /*
-          Com as direções criadas e capturadas no movimento
-          Usa o "Switch" para ativar as animações do personagem
-          Seleciona no "switch" a variável criada com as direções "this.player.direction".
-          E cria todos os casos com as animações ativadas.
-          Dê o play ".play" na Animação ".animations" do Personagem "this.player".
-          Entre os parenteses qual a animação será usada com as IDs criadas na animação.
-        */
+      Com as direções criadas e capturadas no movimento
+      Usa o "Switch" para ativar as animações do personagem
+      Seleciona no "switch" a variável criada com as direções "this.player.direction".
+      E cria todos os casos com as animações ativadas.
+      Dê o play ".play" na Animação ".animations" do Personagem "this.player".
+      Entre os parenteses qual a animação será usada com as IDs criadas na animação.
+    */
     switch (this.player.direction) {
       case "left":
         this.player.animations.play("goLeft"); break;
@@ -146,13 +177,32 @@ var stage1State = {
     }
 
     /* 
-         Aqui é para parar a animação quando o personagem estiver parado.
-         Se "if" no Eixo X ".x" a Velocidade ".velocity" do Corpo ".body" do Personagem "this.player" for igual a "0"
-         E "&&" no Eixo Y ".y" a Velocidade ".velocity" do Corpo ".body" do Personagem "this.player" for igual a "0"
-       */
+      Aqui é para parar a animação quando o personagem estiver parado.
+      Se "if" no Eixo X ".x" a Velocidade ".velocity" do Corpo ".body" do Personagem "this.player" for igual a "0"
+      E "&&" no Eixo Y ".y" a Velocidade ".velocity" do Corpo ".body" do Personagem "this.player" for igual a "0"
+    */
     if (this.player.body.velocity.x === 0 && this.player.body.velocity.y === 0) {
       // Pare ".stop()" a Animação ".animations" do personagem "this.player".
       this.player.animations.stop();
     }
+  },
+
+  /*
+    Função Nova Posição das Moedas
+    A variável "pos" recebe o Array "this.coinPosition" na posição arredondada para baixo "[Math.floor()]"
+    E nos parenteses do arredondamento, gera um número aleatório "Math.random()" multiplicado pelo tamanho do Array.
+    Sorteando uma nova posição para a moeda aparecer.
+  */
+  newPosition: function() {
+    // Sorteia a nova posição para a variável.
+    var pos = this.coinPositions[Math.floor(Math.random() * this.coinPositions.length)];
+
+    // Enquanto a posição sorteada for igual a posição nova, para não ser a mesma.
+    while (this.coinPositions === pos) {
+        // Sorteia novamente outra posição até que seja diferente.
+        pos = this.coinPositions[Math.floor(Math.random() * this.coinPositions.length)];
+    }
+    // Quando tiver uma nova posição válida, retorna ela na função.
+    return pos;
   }
 };
