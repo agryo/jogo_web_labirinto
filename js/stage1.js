@@ -84,6 +84,24 @@ var stage1State = {
     }
 
     /*
+      Adicionar o Inimigo
+      Primeiro cria a variável do inimigo que recebe o sprite da imagem do inimigo.
+      Os parametros são Eixo X, Eixo Y e a Imagem carregada no "load".
+    */
+   this.inimigo = game.add.sprite(75, 75, 'enemy');
+   // Centraliza no próprio eixo.
+   this.inimigo.anchor.set(.5);
+   // Habilita a física ao Inimigo.
+   game.physics.arcade.enable(this.inimigo);
+   // Adiciona a animação do Inimigo.
+   this.inimigo.animations.add("goDown", [0, 1, 2, 3, 4, 5, 6, 7], 12, true);
+   this.inimigo.animations.add("goUp", [8, 9, 10, 11, 12, 13, 14, 15], 12, true);
+   this.inimigo.animations.add("goLeft", [16, 17, 18, 19, 20, 21, 22, 23], 12, true);
+   this.inimigo.animations.add("goRight", [24, 25, 26, 27, 28, 29, 30, 31], 12, true);
+   // Cria a variável da movimentação do Inimigo e já inicia em uma direção.
+   this.inimigo.direction = 'DOWN';
+
+    /*
       Criar as Moedas no Jogo
       Primeira cria o Objeto das Moedas.
       Depois adiciona a nova posição no item do objeto ".position" da moeda recebendo a função criada "newPosition()".
@@ -104,7 +122,7 @@ var stage1State = {
    game.physics.arcade.enable(this.coin);
 
    /*
-     Coletar moedas
+     Contador de moedas
      Primeiro cria a variável zerada com a quantidade de moedas coletadas.
      Depois cria a variável que irá exibir o texto das moedas no jogo.
      Recebendo o texto ".text" adiciona ".add" ao jogo "game".
@@ -132,8 +150,71 @@ var stage1State = {
     */
     game.physics.arcade.overlap(this.player, this.coin, this.getCoin, null, this);
 
-    // Inicia a função de movimentação do jogador.
+    // Inicia a função de movimentação do Inimigo.
+    this.moveInimigo();
+    // Inicia a função de movimentação do Jogador.
     this.movePlayer();
+  },
+
+  /*
+    Função de Movimentação do Inimigo
+    Primeiro verifica se o inimigo está no centro da célula.
+    Cada célula tem 50px de largura e 50px de altura.
+  */
+  moveInimigo: function () {
+    // Se o Eixo X do inimigo menos "25" dividido por "50" obtiver resto "0" e "&&" mesma coisa no Eixo Y.
+    if (Math.floor(this.inimigo.x -25) %50 === 0 && Math.floor(this.inimigo.y -25) %50 === 0) {
+        // Cria as variáveis de coordenadas do inimigo em linha e coluna.
+        var colInimigo = Math.floor(this.inimigo.x / 50);
+        var rowInimigo = Math.floor(this.inimigo.y / 50);
+        // Cria uma Array de possíveis direções a serem seguidas.
+        var validPath = [];
+
+        /*
+          Verifica ao redor do inimigo para onde ele pode ir.
+          Se no mapa na mesma linha do inimigo e coluna menos "1" for diferente de "1" no mapa e "&&"
+          o movimento atual do inimigo for diferente de direita "RIGHT" entra no primeiro "IF".
+          A segunda condição da movimentação é para evitar que ele fique indo e voltando sem sair do lugar.
+          Que é para mover para a esquerda.
+        */
+        if (this.mapa[rowInimigo][colInimigo - 1] !== 1 && this.inimigo.direction !== 'RIGHT') {
+            // Adiciona um caminho válido ao "validPath".
+            validPath.push('LEFT');
+        }
+        // Mesma lógica para o restante das direções possíveis.
+        if (this.mapa[rowInimigo][colInimigo + 1] !== 1 && this.inimigo.direction !== 'LEFT') {
+            validPath.push('RIGHT');
+        }
+        if (this.mapa[rowInimigo - 1][colInimigo] !== 1 && this.inimigo.direction !== 'DOWN') {
+            validPath.push('UP');
+        }
+        if (this.mapa[rowInimigo + 1][colInimigo] !== 1 && this.inimigo.direction !== 'UP') {
+            validPath.push('DOWN');
+        }
+
+        // Com todos as possíveis direções registradas, sorteia uma direção para o inimigo ir.
+        this.inimigo.direction = validPath[Math.floor(Math.random() * validPath.length)];
+    }
+
+    // Movimenta o inimigo na direção sorteada.
+    switch (this.inimigo.direction) {
+        case 'LEFT':
+            this.inimigo.x -= 1;
+            this.inimigo.animations.play('goLeft');
+            break;
+        case 'RIGHT':
+            this.inimigo.x += 1;
+            this.inimigo.animations.play('goRight');
+            break;
+        case 'UP':
+            this.inimigo.y -= 1;
+            this.inimigo.animations.play('goUp');
+            break;
+        case 'DOWN':
+            this.inimigo.y += 1;
+            this.inimigo.animations.play('goDown');
+            break;
+    }
   },
 
   /*
