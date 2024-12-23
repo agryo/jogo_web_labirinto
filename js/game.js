@@ -1,6 +1,14 @@
 // Variável "game" recebe um "new" Phaser.Game com as dimensões 750px por 500px e renderização "CANVAS" do Phaser
 var game = new Phaser.Game(750,500,Phaser.AUTO);
 
+    // Aqui cria a variável global para armazenar a pontuação dos jogadores e será um Objeto.
+    // Os itens do Objeto serão a pontuação do jogo "score" e a melhor pontuação geral "recorde".
+    // Criando aqui ela poderá ser acessada por todas as "State" do jogo.
+    game.global = {
+        score: 0,
+        record: 0
+    };
+
     // Aqui estou instanciando todos os códigos que vão ser usados.
     // O "game", a variável que já foi criada, "state.add" adicionando o State com o nome entre aspas simples e o
     // código que foi criado na pasta JS. O nome que será usado no restante do código é esse entre aspas.

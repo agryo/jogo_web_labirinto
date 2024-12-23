@@ -5,6 +5,38 @@ var menuState = {
   */
   create: function() {
     /*
+      Exibir o Record, a melhor pontuação atingida no jogo.
+      Primeiro verifica SE na memória do navegador "cookie" existe alguma coisa gravada em "labirinto_highScore".
+      E caso não exista "!", ele entra no "IF" e cria esse registro no navegador.
+    */
+    if (!localStorage.getItem('labirinto_highScore')) {
+      // Aqui ele cria o arquivo no cookie e já inicia zerado o valor.
+      localStorage.setItem('labirinto_highScore', 0);
+    }
+
+    // Adiciona o Record atualizado no Menu do Jogo.
+    var txtRecord = game.add.text(
+      game.world.centerX, 
+      350, 
+      'MAIOR RECORD: ' + game.global.record, 
+      { font:'20px emulogic', fill:'#D26111' });
+      // Centraliza no próprio eixo
+      txtRecord.anchor.set(.5);
+      // Deixa o texto transparente, invisível.
+      txtRecord.alpha = 0;
+
+    /*
+      Agora ele verifica se a pontuação atual do jogo e maior que a pontuação armazenada no cookie.
+      SE a pontuação for maior, ele atualiza a pontuação do Record do jogo para ficar gravada.
+      Se não "ELSE" ele atualiza a pontuação no jogo com a armazenada no cookie.
+    */
+    if (game.global.record > localStorage.getItem('labirinto_highScore')) {
+      localStorage.setItem('labirinto_highScore', game.global.record);
+    } else {
+      game.global.record = localStorage.getItem('labirinto_highScore');
+    }
+
+    /*
       Iniciar a música do jogo.
       Variável Global "music" do "manuState" usando o "this" para isso.
     */
@@ -46,20 +78,28 @@ var menuState = {
       E por fim o "this" que é pra dizer que o método pertence ao "menuState" e não dar erro.
     */
     game.time.events.add(1000, function() {
+      /*
+        Após o tempo de 1 segundo até o "PRESSIONE ENTER" subir na tela, ele mostra o "MAIOR RECORD"
+        Inicie ".start()" o Loop ".loop()" a cada meio segundo ".to( alpha 1 e 0 em 500ms)"
+        Interpolado no texto ".to(txtRecord)" e Adicione ".add" ao Jogo "game".
+        Isso da o efeito de ficar piscando na tela o maior record.
+      */
+      game.add.tween(txtRecord).to({ alpha: 1 }, 500).to({ alpha: 0 }, 500).loop().start();
+      
     /*
       Habilita a tecla "ENTER" para o jogador.
       Lendo da Direito para a Esquerda desde os parenteses.
       Entre os parenteses "Phaser" habilite no "Keyboard" a tecla "ENTER"
       E adicione a tecla ".addkey" do teclado ".keyborad" como entrada ".input" no Jogo "game".
     */
-        var enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+      var enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
     /*
       Após capturar o "ENTER" chama o método de iniciar o jogo.
       Entre os parenteses, chama o método "this.startGame" do próprio (this) "menuState" e roda dentro do "menuState".
       E adiciona uma única vez ".addOnce", após pressionada a tecla ".onDown" da variável "enterKey".
     */
-        enterKey.onDown.addOnce(this.startGame, this);
+      enterKey.onDown.addOnce(this.startGame, this);
     }, this);
   },
 

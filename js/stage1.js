@@ -139,15 +139,26 @@ var stage1State = {
    // Adionar a física a moeda para ela ser pegável, colidida.
    game.physics.arcade.enable(this.coin);
 
-   /*
-     Contador de moedas
-     Primeiro cria a variável zerada com a quantidade de moedas coletadas.
-     Depois cria a variável que irá exibir o texto das moedas no jogo.
-     Recebendo o texto ".text" adiciona ".add" ao jogo "game".
-     Entre os parenteses os parametros, Eixo X, Eixo Y, Texto concatenado a variável "this.coins" e estilo da fonte.
-   */
+    /*
+      Contador de moedas
+      Primeiro cria a variável zerada com a quantidade de moedas coletadas.
+      Depois cria a variável que irá exibir o texto das moedas no jogo.
+      Recebendo o texto ".text" adiciona ".add" ao jogo "game".
+      Entre os parenteses os parametros, Eixo X, Eixo Y, Texto concatenado a variável "this.coins" e estilo da fonte.
+    */
     this.coins = 0;
     this.txtCoins = game.add.text(15, 15, 'MOEDAS: ' + this.getText(this.coins), {font: '15px emulogic', fill: '#fff'});
+
+    /*
+      Contador da pontuação
+      Primeiro cria a variável que vai receber os pontos
+    */
+    this.txtPontos = game.add.text(
+      game.world.centerX, 
+      15, 
+      'PONTOS: ' + this.getText(game.global.score), 
+      {font:'15px emulogic', fill:'#fff'});
+      this.txtPontos.anchor.set(.5, 0);
 
     /*
       Controles Movimentação
@@ -262,13 +273,20 @@ var stage1State = {
     // Depois emite as partículas da moeda. 
     // Parametros "( )": Gerar todas ao mesmo tempo "true", Duração, Intervalo (caso gerar seja "false") e Quantidade.
     this.emitter.start(true, 500, null, 15);
-
     // Toca o som da moeda ao pegar ela.
     this.somCoin.play();
     // Adiciona mais "1" a variável do contador
     this.coins++;
     // Atualiza o contador visual no jogo.
     this.txtCoins.text = 'MOEDAS: ' + this.getText(this.coins);
+    // Atualiza o contador dos pontos. Cada moeda aqui vale "5" pontos.
+    game.global.score += 5;
+    // Atualiza o contador visual dos pontos no jogo.
+    this.txtPontos.text = 'PONTOS: ' + this.getText(game.global.score);
+    // Agora verifica SE a pontuação superou o record e caso seja verdade, atualiza o record também.
+    if (game.global.score > game.global.record) {
+      game.global.record = game.global.score;
+    }
     // Reposiciona a nova moeda no mapa
     this.coin.position = this.newPosition();
   },
