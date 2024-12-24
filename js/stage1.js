@@ -6,6 +6,8 @@ var stage1State = {
     this.moedasFase = 10;
     // Cria a variável com o tempo da fase.
     this.tempoFase = 99;
+    // Cria a variável do fator multiplicador do Bonus da fase.
+    this.fatorBonus = 4;
 
     /*
       Iniciar a música do jogo.
@@ -282,7 +284,7 @@ var stage1State = {
           );
           txtLevelComplete.anchor.set(.5);
           // Aumenta os Pontos de acordo com o tempo. O tempo restante multiplicado por "2" nesse caso.
-          const bonus = this.tempoFase * 2;
+          const bonus = this.tempoFase * this.fatorBonus;
           // Atualiza os pontos com o acrescimo do Bonus.
           game.global.score += bonus;
           // Atualiza o texto dos pontos.
