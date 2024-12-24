@@ -5,6 +5,21 @@ var menuState = {
   */
   create: function() {
     /*
+      Iniciar a música do jogo.
+      Variável Global "music" do "manuState" usando o "this" para isso.
+    */
+      this.music = game.add.audio('music');
+      // Informa que a música vai ficar repetindo em "loop"
+      this.music.loop = true;
+      // Informa a altura do som da música do menu será de 50%.
+      this.music.volume = .5;
+      // Inicia a música após as configurações.
+      this.music.play();
+    
+    // Zera o contador de pontos.
+    game.global.score = 0;
+    
+    /*
       Exibir o Record, a melhor pontuação atingida no jogo.
       Primeiro verifica SE na memória do navegador "cookie" existe alguma coisa gravada em "labirinto_highScore".
       E caso não exista "!", ele entra no "IF" e cria esse registro no navegador.
@@ -35,18 +50,6 @@ var menuState = {
     } else {
       game.global.record = localStorage.getItem('labirinto_highScore');
     }
-
-    /*
-      Iniciar a música do jogo.
-      Variável Global "music" do "manuState" usando o "this" para isso.
-    */
-    this.music = game.add.audio('music');
-    // Informa que a música vai ficar repetindo em "loop"
-    this.music.loop = true;
-    // Informa a altura do som da música do menu será de 50%.
-    this.music.volume = .5;
-    // Inicia a música após as configurações.
-    this.music.play();
 
     /* 
       Mesmo esquema para adicionar o título do jogo.

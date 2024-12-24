@@ -334,7 +334,7 @@ var stage2State = {
           // Verifica se passou de fase ou se acabou o tempo.
           if (this.coins >= this.moedasFase) {
             // SE atingiu as moedas suficientes, passa de fase.
-            game.state.start('stage2');
+            game.state.start('end');
           } else {
             // SE NÃO chama o "Menu"
             game.state.start('menu');
