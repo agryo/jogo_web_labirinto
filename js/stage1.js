@@ -3,9 +3,9 @@ var stage1State = {
     // Cria a variável que informa se o jogo inicia ou para (acabou).
     this.onGame = true;
     // Cria a variável com a quantidade de moedas para passar de pase.
-    this.moedasFase = 1;
+    this.moedasFase = 10;
     // Cria a variável com o tempo da fase.
-    this.tempoFase = 5;
+    this.tempoFase = 99;
 
     /*
       Iniciar a música do jogo.
@@ -36,16 +36,16 @@ var stage1State = {
       3 = Representa onde as moedas irão aparecer.
     */
     this.mapa = [
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1],
-      [1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 0, 1],
-      [1, 0, 1, 3, 0, 1, 3, 0, 0, 1, 0, 3, 1, 0, 1],
-      [1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1],
-      [1, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 1, 3, 0, 0, 0, 0, 1, 0, 0, 3, 1, 0, 1],
-      [1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1],
-      [1, 3, 0, 0, 0, 0, 0, 3, 1, 0, 0, 0, 0, 3, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+      [1,3,0,0,0,3,1,3,0,0,0,0,0,3,1],
+      [1,0,1,1,0,1,1,1,1,1,0,1,1,0,1],
+      [1,0,1,3,0,1,3,0,0,1,0,3,1,0,1],
+      [1,0,1,0,1,1,1,1,0,1,0,1,1,0,1],
+      [1,0,0,0,0,1,0,2,0,0,0,0,0,0,1],
+      [1,0,1,3,0,0,0,0,1,0,1,3,1,0,1],
+      [1,0,1,1,1,1,0,1,1,0,1,1,1,0,1],
+      [1,3,0,0,3,1,0,3,1,0,0,0,0,3,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     ];
 
     // Aqui a variável "blocks" vai receber um "group" do Phaser para ser o grupo dos blocos.
