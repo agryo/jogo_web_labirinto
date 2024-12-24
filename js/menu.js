@@ -29,6 +29,9 @@ var menuState = {
       localStorage.setItem('labirinto_highScore', 0);
     }
 
+    // Verifica o record e atualiza.
+    this.atualizaRecord();
+
     // Adiciona o Record atualizado no Menu do Jogo.
     var txtRecord = game.add.text(
       game.world.centerX, 
@@ -39,17 +42,6 @@ var menuState = {
       txtRecord.anchor.set(.5);
       // Deixa o texto transparente, invisível.
       txtRecord.alpha = 0;
-
-    /*
-      Agora ele verifica se a pontuação atual do jogo e maior que a pontuação armazenada no cookie.
-      SE a pontuação for maior, ele atualiza a pontuação do Record do jogo para ficar gravada.
-      Se não "ELSE" ele atualiza a pontuação no jogo com a armazenada no cookie.
-    */
-    if (game.global.record > localStorage.getItem('labirinto_highScore')) {
-      localStorage.setItem('labirinto_highScore', game.global.record);
-    } else {
-      game.global.record = localStorage.getItem('labirinto_highScore');
-    }
 
     /* 
       Mesmo esquema para adicionar o título do jogo.
@@ -115,5 +107,18 @@ var menuState = {
   startGame: function () {
     this.music.stop();
     game.state.start('stage1');
+  },
+
+  /*
+    Agora ele verifica se a pontuação atual do jogo e maior que a pontuação armazenada no cookie.
+    SE a pontuação for maior, ele atualiza a pontuação do Record do jogo para ficar gravada.
+    Se não "ELSE" ele atualiza a pontuação no jogo com a armazenada no cookie.
+  */
+  atualizaRecord: function () {
+    if (game.global.record > localStorage.getItem('labirinto_highScore')) {
+      localStorage.setItem('labirinto_highScore', game.global.record);
+    } else {
+      game.global.record = localStorage.getItem('labirinto_highScore');
+    }
   }
 };
