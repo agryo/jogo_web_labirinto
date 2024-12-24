@@ -2,6 +2,10 @@ var stage1State = {
   create: function () {
     // Cria a variável que informa se o jogo inicia ou para (acabou).
     this.onGame = true;
+    // Cria a variável com a quantidade de moedas para passar de pase.
+    this.moedasFase = 1;
+    // Cria a variável com o tempo da fase.
+    this.tempoFase = 5;
 
     /*
       Iniciar a música do jogo.
@@ -109,38 +113,39 @@ var stage1State = {
       Primeiro cria a variável do inimigo que recebe o sprite da imagem do inimigo.
       Os parametros são Eixo X, Eixo Y e a Imagem carregada no "load".
     */
-   this.inimigo = game.add.sprite(75, 75, 'enemy');
-   // Centraliza no próprio eixo.
-   this.inimigo.anchor.set(.5);
-   // Habilita a física ao Inimigo.
-   game.physics.arcade.enable(this.inimigo);
-   // Adiciona a animação do Inimigo.
-   this.inimigo.animations.add("goDown", [0, 1, 2, 3, 4, 5, 6, 7], 12, true);
-   this.inimigo.animations.add("goUp", [8, 9, 10, 11, 12, 13, 14, 15], 12, true);
-   this.inimigo.animations.add("goLeft", [16, 17, 18, 19, 20, 21, 22, 23], 12, true);
-   this.inimigo.animations.add("goRight", [24, 25, 26, 27, 28, 29, 30, 31], 12, true);
-   // Cria a variável da movimentação do Inimigo e já inicia em uma direção.
-   this.inimigo.direction = 'DOWN';
+    this.inimigo = game.add.sprite(75, 75, 'enemy');
+    // Centraliza no próprio eixo.
+    this.inimigo.anchor.set(.5);
+    // Habilita a física ao Inimigo.
+    game.physics.arcade.enable(this.inimigo);
+    // Adiciona a animação do Inimigo.
+    this.inimigo.animations.add("goDown", [0, 1, 2, 3, 4, 5, 6, 7], 12, true);
+    this.inimigo.animations.add("goUp", [8, 9, 10, 11, 12, 13, 14, 15], 12, true);
+    this.inimigo.animations.add("goLeft", [16, 17, 18, 19, 20, 21, 22, 23], 12, true);
+    this.inimigo.animations.add("goRight", [24, 25, 26, 27, 28, 29, 30, 31], 12, true);
+    // Cria a variável da movimentação do Inimigo e já inicia em uma direção.
+    this.inimigo.direction = 'DOWN';
 
     /*
       Criar as Moedas no Jogo
       Primeira cria o Objeto das Moedas.
       Depois adiciona a nova posição no item do objeto ".position" da moeda recebendo a função criada "newPosition()".
     */
-   this.coin = {};
-   this.coin.position = this.newPosition();
-   // Adiciona a moeda ao jogo recebendo a posição em X, posição em Y e a imagem da moeda "coin".
-   this.coin = game.add.sprite(this.coin.position.x, this.coin.position.y, 'coin');
-   // Centraliza no próprio eixo
-   this.coin.anchor.set(.5);
+    this.coin = {};
+    this.coin.position = this.newPosition();
+    // Adiciona a moeda ao jogo recebendo a posição em X, posição em Y e a imagem da moeda "coin".
+    this.coin = game.add.sprite(this.coin.position.x, this.coin.position.y, 'coin');
+    // Centraliza no próprio eixo
+    this.coin.anchor.set(.5);
+
     /* 
       Adiciona a animação da moeda.
       Adicione ".add" a Animação ".animations" à Moeda "this.coin" e inicie a reprodução ".play()".
       Entre os parenteses são a ID "spin", o Array de cada imagem (recortes), a velocidade "10" e ativar Loop "true".
     */
-   this.coin.animations.add('spin', [0,1,2,3,4,5,6,7,8,9], 10, true).play();
-   // Adionar a física a moeda para ela ser pegável, colidida.
-   game.physics.arcade.enable(this.coin);
+    this.coin.animations.add('spin', [0,1,2,3,4,5,6,7,8,9], 10, true).play();
+    // Adionar a física a moeda para ela ser pegável, colidida.
+    game.physics.arcade.enable(this.coin);
 
     /*
       Contador de moedas
@@ -150,7 +155,8 @@ var stage1State = {
       Entre os parenteses os parametros, Eixo X, Eixo Y, Texto concatenado a variável "this.coins" e estilo da fonte.
     */
     this.coins = 0;
-    this.txtCoins = game.add.text(15, 
+    this.txtCoins = game.add.text(
+      15, 
       15, 
       'MOEDAS: ' + this.getText(this.coins), 
       {font: '15px emulogic', fill: '#fff'}
@@ -191,15 +197,14 @@ var stage1State = {
 
     /*
       Criação do tempo, temporizador do jogo
-      Primeiro cria a variável que armazena o tempo.
-      Depois cria a variável que mostra o texto do tempo no jogo com suas configurações nos parametros.
+      Cria a variável que mostra o texto do tempo no jogo com suas configurações nos parametros.
+      Usa a variável que armazena o tempo criada no inicio do código no "getText".
       E centraliza no final da tela.
     */
-    this.tempo = 5;
     this.txtTempo = game.add.text(
       game.world.width - 15, 
       15, 
-      'TEMPO: ' + this.getText(this.tempo), 
+      'TEMPO: ' + this.getText(this.tempoFase), 
       {font:'15px emulogic', fill:"#fff"}
     );
     this.txtTempo.anchor.set(1, 0);
@@ -207,9 +212,9 @@ var stage1State = {
     // Parametros -> ( ): Tempo para repetir "1000ms", a Função pra chamar a cada repetição e o contexto "this".
     this.timer = game.time.events.loop(1000, function(){
       // Diminui o tempo em 1 segundo
-      this.tempo--;
+      this.tempoFase--;
       // Atualiza o tempo visualmente no jogo.
-      this.txtTempo.text = 'TEMPO: ' + this.getText(this.tempo);
+      this.txtTempo.text = 'TEMPO: ' + this.getText(this.tempoFase);
     }, this);
   },
 
@@ -238,7 +243,7 @@ var stage1State = {
         SE o tempo acabar OU o jogador atigir o objetivo de coletar "10" moedas nesse caso.
         Assim ela executa as operações nescessárias para finalizar o jogo.
       */
-      if (this.tempo < 1 || this.coins >= 10) {
+      if (this.tempoFase < 1 || this.coins >= this.moedasFase) {
         // Chama a Função de Fim de Jogo.
         this.gameOver();
 
@@ -258,13 +263,51 @@ var stage1State = {
         this.inimigo.animations.stop();
         this.inimigo.frame = 0;
 
+        // Para a animação das moedas.
+        this.coin.animations.stop();
+        this.coin.frame = 4;
+
         /*
           Condição para testar se o jogo acabou por causa do tempo ou passou de fase.
           SE o jogador pegar a quantidade de moedas suficientes, entra no primeiro caso.
           SE NÂO o jogador não conseguiu pegar as moedas no tempo do jogo.
         */
-        if (this.coins >= 10) {
-          
+        if (this.coins >= this.moedasFase) {
+          // Exibe na tela que passou de fase.
+          const txtLevelComplete = game.add.text(
+            game.world.centerX,
+            150,
+            'LEVEL COMPLETO!',
+            {font:'30px emulogic', fill:'#fff'}
+          );
+          txtLevelComplete.anchor.set(.5);
+          // Aumenta os Pontos de acordo com o tempo. O tempo restante multiplicado por "2" nesse caso.
+          const bonus = this.tempoFase * 2;
+          // Atualiza os pontos com o acrescimo do Bonus.
+          game.global.score += bonus;
+          // Atualiza o texto dos pontos.
+          this.txtPontos.text = 'PONTOS: ' + this.getText(game.global.score);
+
+          // Atualiza o record caso tenha sido atingido.
+          this.verificaRecord();
+
+          // Exibe a pontuação de Bonus.
+          const txtBonus = game.add.text(
+            game.world.centerX,
+            250,
+            'BONUS DE TEMPO: ' + this.getText(bonus),
+            {font:'20px emulogic', fill:'#fff'}
+          );
+          txtBonus.anchor.set(.5);
+
+          // Exibe a pontuação final da fase.
+          const txtPontoFinal = game.add.text(
+            game.world.centerX,
+            300,
+            'TOTAL DE PONTOS: ' + this.getText(game.global.score),
+            {font:'20px emulogic', fill:'#fff'}
+          );
+          txtPontoFinal.anchor.set(.5);
         } else {
           // Exibe a mensagem de Fim de Jogo.
           const txtGameOver = game.add.text(game.world.centerX, 250, 'GAME OVER', {font:'30px emulogic', fill:'#fff'});
@@ -274,7 +317,7 @@ var stage1State = {
         // Aqui exibe a melhor pontuação independente se passou de fase ou se perdeu.
         const txtBestScore = this.game.add.text(
           game.world.centerX, 
-          350, 
+          375, 
           'MELHOR RESULTADO: ' + this.getText(game.global.record), 
           {font:'20px emulogic', fill:"#fff"}
         );
@@ -289,9 +332,9 @@ var stage1State = {
           // Para a musica do Stage atual.
           this.music.stop();
           // Verifica se passou de fase ou se acabou o tempo.
-          if (this.coins >= 10) {
+          if (this.coins >= this.moedasFase) {
             // SE atingiu as moedas suficientes, passa de fase.
-
+            game.state.start('stage2');
           } else {
             // SE NÃO chama o "Menu"
             game.state.start('menu');
@@ -302,9 +345,19 @@ var stage1State = {
   },
 
   /*
+    Função para verificar se o Record foi superado.
+    Primeiro ele verifica SE a pontuação atual é maior que o Record.
+    Se for verdade, ele atualiza o Record com a pontuação atual.
+  */
+  verificaRecord: function () {
+    if (game.global.score > game.global.record) {
+      game.global.record = game.global.score;
+    }
+  },
+
+  /*
     Função Fim de Jogo (Game Over)
-    Primeiro finaliza o Jogo.
-    
+    Atualiza a variável que finaliza o Jogo.
   */
   gameOver: function () {
     // Quando o jogo acaba, por tempo ou conclusão, o jogo acaba. A variável "this.onGame" recebe "false".
@@ -394,9 +447,8 @@ var stage1State = {
     // Atualiza o contador visual dos pontos no jogo.
     this.txtPontos.text = 'PONTOS: ' + this.getText(game.global.score);
     // Agora verifica SE a pontuação superou o record e caso seja verdade, atualiza o record também.
-    if (game.global.score > game.global.record) {
-      game.global.record = game.global.score;
-    }
+    this.verificaRecord();
+
     // Reposiciona a nova moeda no mapa
     this.coin.position = this.newPosition();
   },
