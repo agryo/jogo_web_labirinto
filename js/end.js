@@ -8,7 +8,7 @@ var endState = {
           game.world.centerX, 
           250, 
           'PRESSIONE ENTER', 
-          {font:'25px emulogic', fill:"#fff"}
+          {font:'25px emulogic', fill:"#FFD700"}
         );
         txtPressEnter.anchor.set(.5);
         // Inicia o texto transparente.

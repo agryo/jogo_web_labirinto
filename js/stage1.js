@@ -3,11 +3,11 @@ var stage1State = {
     // Cria a variável que informa se o jogo inicia ou para (acabou).
     this.onGame = true;
     // Cria a variável com a quantidade de moedas para passar de pase.
-    this.moedasFase = 10;
+    this.moedasFase = 1;
     // Cria a variável com o tempo da fase.
     this.tempoFase = 99;
     // Cria a variável do fator multiplicador do Bonus da fase.
-    this.fatorBonus = 4;
+    this.fatorBonus = 5;
 
     /*
       Iniciar a música do jogo.
