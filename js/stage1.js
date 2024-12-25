@@ -115,18 +115,8 @@ var stage1State = {
       Primeiro cria a variável do inimigo que recebe o sprite da imagem do inimigo.
       Os parametros são Eixo X, Eixo Y e a Imagem carregada no "load".
     */
-    this.inimigo = game.add.sprite(75, 75, 'enemy');
-    // Centraliza no próprio eixo.
-    this.inimigo.anchor.set(.5);
-    // Habilita a física ao Inimigo.
-    game.physics.arcade.enable(this.inimigo);
-    // Adiciona a animação do Inimigo.
-    this.inimigo.animations.add("goDown", [0, 1, 2, 3, 4, 5, 6, 7], 12, true);
-    this.inimigo.animations.add("goUp", [8, 9, 10, 11, 12, 13, 14, 15], 12, true);
-    this.inimigo.animations.add("goLeft", [16, 17, 18, 19, 20, 21, 22, 23], 12, true);
-    this.inimigo.animations.add("goRight", [24, 25, 26, 27, 28, 29, 30, 31], 12, true);
-    // Cria a variável da movimentação do Inimigo e já inicia em uma direção.
-    this.inimigo.direction = 'DOWN';
+    this.inimigo1 = this.addInimigo(75, 75, 'enemy');
+    this.inimigo2 = this.addInimigo(675, 425, 'enemy');
 
     /*
       Criar as Moedas no Jogo
@@ -233,10 +223,12 @@ var stage1State = {
       */
       game.physics.arcade.overlap(this.player, this.coin, this.getCoin, null, this);
       // Informa que o Inimigo pode ter contato com o jogador para roubar moedas.
-      game.physics.arcade.overlap(this.player, this.inimigo, this.loseCoin, null, this);
+      game.physics.arcade.overlap(this.player, this.inimigo1, this.loseCoin, null, this);
+      game.physics.arcade.overlap(this.player, this.inimigo2, this.loseCoin, null, this);
 
       // Inicia a função de movimentação do Inimigo.
-      this.moveInimigo();
+      this.moveInimigo(this.inimigo1);
+      this.moveInimigo(this.inimigo2);
       // Inicia a função de movimentação do Jogador.
       this.movePlayer();
 
@@ -253,21 +245,15 @@ var stage1State = {
         // Remova o Temporizador ".remove(this.timer)" do Evento ".events" de Tempo ".time" do Jogo "game".
         game.time.events.remove(this.timer);
 
-        // Agora para o personagem no Eixo X e Eixo Y.
-        this.player.body.velocity.x = 0;
-        this.player.body.velocity.y = 0;
-        // Para a animação do personagem.
-        this.player.animations.stop();
-        // E para o personagem na primeira imagem que ele está virado para a tela do jogador.
-        this.player.frame = 0;
+        // Para o jogador ao concluir a fase.
+        this.pararPlayer();
 
-        // Para o Inimigo também. O inimigo já para nois eixos pois a função dele está dentro do "Update".
-        this.inimigo.animations.stop();
-        this.inimigo.frame = 0;
+        // Para os inimigos ao concluir a fase.
+        this.pararInimigo(this.inimigo1);
+        this.pararInimigo(this.inimigo2);
 
-        // Para a animação das moedas.
-        this.coin.animations.stop();
-        this.coin.frame = 4;
+        // Para a moeda ao concluir a fase.
+        this.pararMoeda();
 
         /*
           Condição para testar se o jogo acabou por causa do tempo ou passou de fase.
@@ -371,12 +357,12 @@ var stage1State = {
     Primeiro verifica se o inimigo está no centro da célula.
     Cada célula tem 50px de largura e 50px de altura.
   */
-  moveInimigo: function () {
+  moveInimigo: function (inimigo) {
     // Se o Eixo X do inimigo menos "25" dividido por "50" obtiver resto "0" e "&&" mesma coisa no Eixo Y.
-    if (Math.floor(this.inimigo.x -25) %50 === 0 && Math.floor(this.inimigo.y -25) %50 === 0) {
+    if (Math.floor(inimigo.x -25) %50 === 0 && Math.floor(inimigo.y -25) %50 === 0) {
         // Cria as variáveis de coordenadas do inimigo em linha e coluna.
-        var colInimigo = Math.floor(this.inimigo.x / 50);
-        var rowInimigo = Math.floor(this.inimigo.y / 50);
+        var colInimigo = Math.floor(inimigo.x / 50);
+        var rowInimigo = Math.floor(inimigo.y / 50);
         // Cria uma Array de possíveis direções a serem seguidas, para o inimigo.
         var validPath = [];
 
@@ -387,44 +373,106 @@ var stage1State = {
           A segunda condição da movimentação é para evitar que ele fique indo e voltando sem sair do lugar.
           Que é para mover para a esquerda.
         */
-        if (this.mapa[rowInimigo][colInimigo - 1] !== 1 && this.inimigo.direction !== 'RIGHT') {
+        if (this.mapa[rowInimigo][colInimigo - 1] !== 1 && inimigo.direction !== 'RIGHT') {
             // Adiciona um caminho válido ao "validPath".
             validPath.push('LEFT');
         }
         // Mesma lógica para o restante das direções possíveis.
-        if (this.mapa[rowInimigo][colInimigo + 1] !== 1 && this.inimigo.direction !== 'LEFT') {
+        if (this.mapa[rowInimigo][colInimigo + 1] !== 1 && inimigo.direction !== 'LEFT') {
             validPath.push('RIGHT');
         }
-        if (this.mapa[rowInimigo - 1][colInimigo] !== 1 && this.inimigo.direction !== 'DOWN') {
+        if (this.mapa[rowInimigo - 1][colInimigo] !== 1 && inimigo.direction !== 'DOWN') {
             validPath.push('UP');
         }
-        if (this.mapa[rowInimigo + 1][colInimigo] !== 1 && this.inimigo.direction !== 'UP') {
+        if (this.mapa[rowInimigo + 1][colInimigo] !== 1 && inimigo.direction !== 'UP') {
             validPath.push('DOWN');
         }
-
+      
         // Com todos as possíveis direções registradas, sorteia uma direção para o inimigo ir.
-        this.inimigo.direction = validPath[Math.floor(Math.random() * validPath.length)];
+        inimigo.direction = validPath[Math.floor(Math.random() * validPath.length)];
     }
 
     // Movimenta o inimigo na direção sorteada.
-    switch (this.inimigo.direction) {
+    switch (inimigo.direction) {
         case 'LEFT':
-            this.inimigo.x -= 1;
-            this.inimigo.animations.play('goLeft');
+            inimigo.x -= 1;
+            inimigo.animations.play('goLeft');
             break;
         case 'RIGHT':
-            this.inimigo.x += 1;
-            this.inimigo.animations.play('goRight');
+            inimigo.x += 1;
+            inimigo.animations.play('goRight');
             break;
         case 'UP':
-            this.inimigo.y -= 1;
-            this.inimigo.animations.play('goUp');
+            inimigo.y -= 1;
+            inimigo.animations.play('goUp');
             break;
         case 'DOWN':
-            this.inimigo.y += 1;
-            this.inimigo.animations.play('goDown');
+            inimigo.y += 1;
+            inimigo.animations.play('goDown');
             break;
     }
+  },
+
+  /*
+    Função Adicionar Novo Inimigo
+    Essa função cria um novo inimigo para ser adicionado ao jogo.
+    Parametros: Eixo X, Eixo Y de onde ele vai iniciar e SpriteKey é a imagem do sprite do inimigo.
+  */
+  addInimigo: function (x, y, spriteKey) {
+    // Cria o sprite do inimigo.
+    var inimigo = game.add.sprite(x, y, spriteKey);
+    
+    // Centraliza no próprio eixo.
+    inimigo.anchor.set(0.5);
+    
+    // Habilita a física ao inimigo.
+    game.physics.arcade.enable(inimigo);
+    
+    // Adiciona as animações do inimigo.
+    inimigo.animations.add("goDown", [0, 1, 2, 3, 4, 5, 6, 7], 12, true);
+    inimigo.animations.add("goUp", [8, 9, 10, 11, 12, 13, 14, 15], 12, true);
+    inimigo.animations.add("goLeft", [16, 17, 18, 19, 20, 21, 22, 23], 12, true);
+    inimigo.animations.add("goRight", [24, 25, 26, 27, 28, 29, 30, 31], 12, true);
+    
+    // Define a direção inicial.
+    inimigo.direction = 'DOWN';
+    
+    return inimigo;
+  },
+
+  /*
+    Função para Parar o Jogador
+    Essa função para o jogador e vira ele para a camera quando termina a fase.
+  */
+  pararPlayer: function () {
+    // Agora para o personagem no Eixo X e Eixo Y.
+    this.player.body.velocity.x = 0;
+    this.player.body.velocity.y = 0;
+    // Para a animação do personagem.
+    this.player.animations.stop();
+    // E para o personagem na primeira imagem que ele está virado para a tela do jogador.
+    this.player.frame = 0;
+  },
+
+  /*
+    Função para Parar o Inimigo
+    Essa função para o inimigo e vira ele para a camera quando termina a fase.
+    Parametros: O inimigo que deve ser parado. Caso tenha mais de um, adiciona duas vezes individualmente.
+  */
+  pararInimigo: function (inimigo) {
+    // Para o Inimigo também. O inimigo já para nois eixos pois a função dele está dentro do "Update".
+    inimigo.animations.stop();
+    inimigo.frame = 0;
+  },
+
+  /*
+    Função para Parar a Moeda
+    Essa função para a moeda e vira ela para a camera quando termina a fase.
+  */
+  pararMoeda: function () {
+    // Para a animação das moedas.
+    this.coin.animations.stop();
+    this.coin.frame = 4;
   },
 
   /*
