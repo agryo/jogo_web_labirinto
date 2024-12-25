@@ -226,6 +226,7 @@ var stage2State = {
         // Informa que o Inimigo pode ter contato com o jogador para roubar moedas.
         game.physics.arcade.overlap(this.player, this.inimigo1, this.loseCoin, null, this);
         game.physics.arcade.overlap(this.player, this.inimigo2, this.loseCoin, null, this);
+        game.physics.arcade.overlap(this.player, this.inimigo3, this.loseCoin, null, this);
   
         // Inicia a função de movimentação do Inimigo.
         this.moveInimigo(this.inimigo1);
