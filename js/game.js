@@ -308,3 +308,68 @@ function movePlayer (controle, jogador) {
     jogador.animations.stop();
   }
 }
+
+/*
+  Iniciar a música do jogo.
+  Variável Global "music" do "manuState" usando o "this" para isso.
+*/
+function adicionarMusica (idMusica) {
+  const music = game.add.audio(idMusica);
+  // Informa que a música vai ficar repetindo em "loop"
+  music.loop = true;
+  // Informa a altura do som da música do menu será de 50%.
+  music.volume = .5;
+  // Inicia a música após as configurações.
+  music.play();
+  // Retorna a música pronta pra fase do jogo e já iniciada.
+  return music;
+}
+
+/*
+  Carrega os sons do jogo.
+  Adiciona os sons de interação do jogo.
+*/
+function addSons(idSom) {
+  som = game.add.audio(idSom);
+  som.volume = .5;
+  // Retorna o som preparado para a fase do jogo.
+  return som;
+}
+
+/*
+  Função para criar os Blocos.
+  Essa função cria o grupo dos blocos que serão usado para preencher o mapa.
+*/
+function addBlocos() {
+  // Aqui a variável "blocks" vai receber um "group" do Phaser para ser o grupo dos blocos.
+  var blocks = game.add.group();
+  // Agora ativa o corpo físico dos blocos para serem colididos.
+  blocks.enableBody = true;
+  // Retorna o bloco pronto para usar.
+  return blocks;
+}
+
+/*
+  Função de criar o Jogador.
+  A função recebe as coordenadas X e Y para ele ser criado e a ID da Imagem do player carregada no "load.js".
+*/
+function adicionarPlayer (x, y, idPlayer) {
+  // A variável "jogador" recebe o sprite do jogador. O "X" e "Y" somam "+ 25" para ficar no centro.
+  var jogador = game.add.sprite(x + 25, y + 25, idPlayer);
+  // E centraliza no próprio eixo.
+  jogador.anchor.set(0.5);
+  // Ativa a movimentação do jogador já carregada no "load"
+  game.physics.arcade.enable(jogador);
+  /*
+    Criar a animação do personagem movimentando para todas as direções.
+    Adicione ".add" as Animações ".animations" ao Personagem "this.player"
+    Entre os parenteses são a ID "goDown", Array das Imagens, Velocidade e Loop ativo "true".
+  */
+  jogador.animations.add("goDown", [0, 1, 2, 3, 4, 5, 6, 7], 12, true);
+  jogador.animations.add("goUp", [8, 9, 10, 11, 12, 13, 14, 15], 12, true);
+  jogador.animations.add("goLeft", [16, 17, 18, 19, 20, 21, 22, 23], 12, true);
+  jogador.animations.add("goRight", [24, 25, 26, 27, 28, 29, 30, 31], 12, true); 
+
+  // Retorna o jogador pronto para a fase do jogo.
+  return jogador;
+}

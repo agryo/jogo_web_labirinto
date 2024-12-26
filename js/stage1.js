@@ -7,22 +7,14 @@ var stage1State = {
     this.stageConfig = configFase(1, 99, 5);
 
     /*
-      Iniciar a música do jogo.
-      Variável Global "music" do "manuState" usando o "this" para isso.
+      Adiciona e iniciar a música do jogo já configurada.
+      Parametro: O string da ID da música da fase carregada no "load.js"
     */
-    this.music = game.add.audio('somstage1');
-    // Informa que a música vai ficar repetindo em "loop"
-    this.music.loop = true;
-    // Informa a altura do som da música do menu será de 50%.
-    this.music.volume = .5;
-    // Inicia a música após as configurações.
-    this.music.play();
+    this.music = adicionarMusica('somstage1');
     // Carrega o som do jogo ao pegar o item.
-    this.somCoin = game.add.audio('getitem');
-    this.somCoin.volume = .5;
+    this.somCoin = addSons('getitem');
     // Carrega o som de quando perde moedas.
-    this.somLoseCoin = game.add.audio('loseitem');
-    this.somLoseCoin.volume = .5;
+    this.somLoseCoin = addSons('loseitem');
 
     // Adiciona a imagem de fundo no Stage, Eixo X e Y com "0" para preencher tudo e "bg" é a imagem já carregada.
     game.add.sprite(0, 0, "bg");
@@ -47,12 +39,12 @@ var stage1State = {
       [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     ];
 
-    // Aqui a variável "blocks" vai receber um "group" do Phaser para ser o grupo dos blocos.
-    this.blocks = game.add.group();
-    // Agora ativa o corpo físico dos blocos para serem colididos.
-    this.blocks.enableBody = true;
+    // Aqui a variável "blocks" vai receber a função que cria o grupo de blocos.
+    this.blocks = addBlocos();
     // Array para as possíveis posições das moedas
     this.coinPositions = [];
+    // Cria variável para receber o jogador.
+    this.player;
 
     /*
       O "FOR" vai percorrer a matriz para detectar os números para em seguida montar o mapa.
@@ -77,21 +69,8 @@ var stage1State = {
         }
         // Depois adiciona o Jogador caso seja igual a "2"
         else if (tile === 2) {
-          // A variável "player" recebe o sprite do jogador. O "X" e "Y" somam "+ 25" para ficar no centro.
-          this.player = game.add.sprite(x + 25, y + 25, "player");
-          // E centraliza no próprio eixo.
-          this.player.anchor.set(0.5);
-          // Ativa a movimentação do jogador já carregada no "load"
-          game.physics.arcade.enable(this.player);
-          /*
-            Criar a animação do personagem movimentando para todas as direções.
-            Adicione ".add" as Animações ".animations" ao Personagem "this.player"
-            Entre os parenteses são a ID "goDown", Array das Imagens, Velocidade e Loop ativo "true".
-          */
-          this.player.animations.add("goDown", [0, 1, 2, 3, 4, 5, 6, 7], 12, true);
-          this.player.animations.add("goUp", [8, 9, 10, 11, 12, 13, 14, 15], 12, true);
-          this.player.animations.add("goLeft", [16, 17, 18, 19, 20, 21, 22, 23], 12, true);
-          this.player.animations.add("goRight", [24, 25, 26, 27, 28, 29, 30, 31], 12, true);
+          // A variável "player" recebe função de criar o jogador.
+          this.player = adicionarPlayer(x, y, 'player');
         }
         // Depois adiciona as possíveis posições onde as moedas irão aparecer caso seja igual a "3".
         else if (tile === 3) {
