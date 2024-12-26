@@ -44,47 +44,10 @@ var stage1State = {
     // Array para as possíveis posições das moedas
     this.coinPositions = [];
     // Cria variável para receber o jogador.
-    this.player;
+    this.player = adicionarPlayer(0, 0, 'player');
 
-    /*
-      O "FOR" vai percorrer a matriz para detectar os números para em seguida montar o mapa.
-      Primeiro ele percorre as linhas "row" no mapa "this.mapa".
-      Depois ele percorre as colunas "col" na linha do mapa "this.mapa[row]".
-      Durante a detecção ele cria a variável "tile" que recebe a linha e coluna do mapa.
-      Cria as variáveis de "X" e "Y" para informar o tamanho dos blocos que serão 50px (multiplica por 50).
-      E finalmente monta o mapa com o "IF" onde se o "tile" for igual a "1" o "block" recebe os dados.
-    */
-    for (var row in this.mapa) {
-      for (var col in this.mapa[row]) {
-        var tile = this.mapa[row][col];
-
-        var x = col * 50;
-        var y = row * 50;
-
-        // Primeiro adiciona os Blocos nos casos iguais a "1"
-        if (tile === 1) {
-          var block = this.blocks.create(x, y, "block");
-          // Após criar o bloco, informa que o corpo ".body" dele não pode se mover ".immovable" como "true".
-          block.body.immovable = true;
-        }
-        // Depois adiciona o Jogador caso seja igual a "2"
-        else if (tile === 2) {
-          // A variável "player" recebe função de criar o jogador.
-          this.player = adicionarPlayer(x, y, 'player');
-        }
-        // Depois adiciona as possíveis posições onde as moedas irão aparecer caso seja igual a "3".
-        else if (tile === 3) {
-            // Váriável que receberá um objeto com as coordenadas das posições em X e Y.
-            var position = {
-                // X e Y "+ 25" pois são o centro da célula.
-                x: x + 25,
-                y: y + 25
-            };
-            // Em seguida adiciona as posiçõoes ao Array criado mais acima.
-            this.coinPositions.push(position);
-        }
-      }
-    }
+    // Chama a função que monta o mapa e os objetos da fase.
+    montarFase(this.mapa, 'block', this.blocks, this.coinPositions, this.player);
 
     /*
       Adicionar o Inimigo
