@@ -42,6 +42,7 @@ var loadState = {
    */
     game.load.image('bg', 'img/bg.png');
     game.load.image('block', 'img/block.png');
+    game.load.image('blockp', 'img/blockp.png');
     game.load.image('end', 'img/end.png');
     game.load.image('part', 'img/part.png');
 
