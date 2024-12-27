@@ -420,3 +420,201 @@ function montarFase(mapa, idBlock, blocos, positionCoin, jogador) {
     }
   }
 }
+
+/*
+  Criar as Moedas no Jogo
+  Primeira cria o Objeto das Moedas.
+  Depois adiciona a nova posição no item do objeto ".position" da moeda recebendo a função criada "newPosition()".
+*/
+function criarMoeda (coinPositions){
+  var coin = {};
+  coin.position = newPosition(coinPositions);
+  // Adiciona a moeda ao jogo recebendo a posição em X, posição em Y e a imagem da moeda "coin".
+  coin = game.add.sprite(coin.position.x, coin.position.y, 'coin');
+  // Centraliza no próprio eixo
+  coin.anchor.set(.5);
+  /* 
+    Adiciona a animação da moeda.
+    Adicione ".add" a Animação ".animations" à Moeda "this.coin" e inicie a reprodução ".play()".
+    Entre os parenteses são a ID "spin", o Array de cada imagem (recortes), a velocidade "10" e ativar Loop "true".
+  */
+  coin.animations.add('spin', [0,1,2,3,4,5,6,7,8,9], 10, true).play();
+  // Adionar a física a moeda para ela ser pegável, colidida.
+  game.physics.arcade.enable(coin);
+  return coin;
+}
+
+/*
+  Contador de moedas
+  Primeiro cria a variável que irá exibir o texto das moedas no jogo.
+  Recebendo o texto ".text" adiciona ".add" ao jogo "game".
+  Entre os parenteses os parametros, Eixo X, Eixo Y, Texto concatenado a variável "moedas" e estilo da fonte.
+*/
+function contarMoedas(moedas) {
+  var txtMoedas = game.add.text(
+    15, 
+    15, 
+    'MOEDAS: ' + getText(moedas), 
+    {font: '15px emulogic', fill: '#fff'}
+  );
+
+  // Retorna o texto das moedas para exibir.
+  return txtMoedas;
+}
+
+/*
+  Contador da pontuação
+  Primeiro cria a variável que vai receber os pontos.
+  E recebe a função do contator de pontos.
+*/
+function contadorPontos() {
+  var txtPontos = game.add.text(
+    game.world.centerX, 
+    15, 
+    'PONTOS: ' + getText(game.global.score), 
+    {font:'15px emulogic', fill:'#fff'}
+  );
+  txtPontos.anchor.set(.5, 0);
+
+  // Retorna o texto para exibir.
+  return txtPontos;
+}
+
+/*
+  Criação do tempo, temporizador do jogo
+  Cria a variável que mostra o texto do tempo no jogo com suas configurações nos parametros.
+  Usa a variável que armazena o tempo criada no inicio do código no "getText".
+  E centraliza no final da tela.
+*/
+function contadorTempo(tempo) {
+  var txtTempo = game.add.text(
+    game.world.width - 15, 
+    15, 
+    'TEMPO: ' + getText(tempo), 
+    {font:'15px emulogic', fill:"#fff"}
+  );
+  txtTempo.anchor.set(1, 0);
+
+  // Retorna o texto para exibir.
+  return txtTempo;
+}
+
+/*
+  Função do Cronometro da fase.
+  Cria a variável "cronometro" que recebe um loop repetido ".loop()" que é um evento ".events" de Tempo ".time" no Jogo "game".
+  Parametros -> ( ): Tempo para repetir "1000ms", a Função pra chamar a cada repetição e o contexto "this".
+*/
+function cronometroFase(txtTempo) {
+  var cronometro = game.time.events.loop(1000, function(){
+    // Diminui o tempo em 1 segundo
+    this.stageConfig.tempoFase--;
+    // Atualiza o tempo visualmente no jogo.
+    txtTempo.text = 'TEMPO: ' + getText(this.stageConfig.tempoFase);
+  }, this);
+
+  // Retorna o texto para exibir.
+  return cronometro;
+}
+
+/*
+  Função que exibe a tela de Fase Concluida.
+  Gera todos os textos a serem exibidos ao concluir uma fase.
+*/
+function levelCompleto(txtPontos) {
+  const txtLevelComplete = game.add.text(
+    game.world.centerX,
+    150,
+    'LEVEL COMPLETO!',
+    {font:'30px emulogic', fill:'#fff'}
+  );
+  txtLevelComplete.anchor.set(.5);
+  // Aumenta os Pontos de acordo com o tempo. O tempo restante multiplicado por "2" nesse caso.
+  const bonus = this.stageConfig.tempoFase * this.stageConfig.fatorBonus;
+  // Atualiza os pontos com o acrescimo do Bonus.
+  game.global.score += bonus;
+  // Atualiza o texto dos pontos.
+  txtPontos.text = 'PONTOS: ' + getText(game.global.score);
+
+  // Exibe a pontuação de Bonus.
+  const txtBonus = game.add.text(
+    game.world.centerX,
+    250,
+    'BONUS DE TEMPO: ' + getText(bonus),
+    {font:'20px emulogic', fill:'#fff'}
+  );
+  txtBonus.anchor.set(.5);
+
+  // Exibe a pontuação final da fase.
+  const txtPontoFinal = game.add.text(
+    game.world.centerX,
+    300,
+    'TOTAL DE PONTOS: ' + getText(game.global.score),
+    {font:'20px emulogic', fill:'#fff'}
+  );
+  txtPontoFinal.anchor.set(.5);
+
+  // Exibe o record.
+  mostraRecord();
+
+  return txtLevelComplete;
+}
+
+/*
+  Função que exibe a Tela de Game Over.
+  Essa função gera o texto para ser exibido na tela o Game Over.
+  Exibe também o record atual.
+*/
+function txtGameOver() {
+  // Cria a variável "txtGameOver" que recebe o texto ".text" e adiciona ".add" ao jogo "game".
+  // Parametros ( ): Eixo X, Eixo Y, Texto e Configuração da Fonte.
+  const txtGameOver = game.add.text(game.world.centerX, 250, 'GAME OVER', {font:'30px emulogic', fill:'#fff'});
+  // Centraliza no próprio eixo.
+  txtGameOver.anchor.set(.5);
+
+  // Exibe o record.
+  mostraRecord();
+
+  // Retorna o texto da tela de Game Over.
+  return txtGameOver;
+}
+
+/*
+  Função que exibe o Record na fase.
+  Essa função gera o texto para ser exibido na tela da fase o record.
+*/
+function mostraRecord() {
+  // Aqui exibe a melhor pontuação independente se passou de fase ou se perdeu.
+  const txtBestScore = this.game.add.text(
+    game.world.centerX, 
+    375, 
+    'MELHOR RESULTADO: ' + getText(game.global.record), 
+    {font:'20px emulogic', fill:"#fff"}
+  );
+  txtBestScore.anchor.set(.5);
+  // Retorna o texto do Record.
+  return txtBestScore;
+}
+
+/*
+  Função que verifica se passou de fase ou perdeu.
+  Cria o evento que chama novamente o Menu Principal ou Próxima Fase.
+  Parametros: Recebe as moedas coletadas na fase, Música da Fase atual, ID da Próxima Fase carregada no "load.js"
+*/
+function passaOuPerde(moedas, musica, proximaFase) {
+  /*
+    Primeiro cria um evento que após um tempo chama a função.
+    Parametros: Tempo de duração para chamar o evento "5000ms", a Função que executa e o contexto "this".
+  */
+  game.time.events.add(5000, function() {
+    // Para a musica do Stage atual.
+    musica.stop();
+    // Verifica se passou de fase ou se acabou o tempo.
+    if (moedas >= this.stageConfig.moedasFase) {
+      // SE atingiu as moedas suficientes, passa de fase.
+      game.state.start(proximaFase);
+    } else {
+      // SE NÃO chama o "Menu"
+      game.state.start('menu');
+    }
+  }, this); 
+}
