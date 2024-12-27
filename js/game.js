@@ -376,6 +376,7 @@ function adicionarPlayer (x, y, idPlayer) {
 
 /*
   Função de montar a fase do jogo.
+  Parametros: Mada da Fase, ID da imagem da parede, Grupo de Blocos da Fase, Possíveis Posições das Moedas e o Jogador.
 */
 function montarFase(mapa, idBlock, blocos, positionCoin, jogador) {
   /*

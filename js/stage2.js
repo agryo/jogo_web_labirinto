@@ -4,7 +4,7 @@ var stage2State = {
       Cria um Objeto com as configurações da fase.
       Parametros: Moedas da Fase, Tempo da Fase, Fator de Bonus da Fase.
     */
-    this.stageConfig = configFase(2, 110, 5);
+    this.stageConfig = configFase(15, 110, 5);
 
     /*
       Adiciona e iniciar a música do jogo já configurada.
