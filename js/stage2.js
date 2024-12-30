@@ -4,7 +4,7 @@ var stage2State = {
       Cria um Objeto com as configurações da fase.
       Parametros: Moedas da Fase, Tempo da Fase, Fator de Bonus da Fase.
     */
-    this.stageConfig = configFase(1, 15, 5);
+    this.stageConfig = configFase(12, 110, 5);
 
     /*
       Adiciona e iniciar a música do jogo já configurada.
@@ -87,7 +87,7 @@ var stage2State = {
       Criação do emissor das partículas da explosão
       Aqui a variável "emitter" a função que gera as partículas.
     */
-    this.emitter = geraParcicula();
+    this.emitter = gerarParcicula();
 
     // A variável recebe o texto do tempo para exibir no jogo.
     this.txtTempo = contadorTempo(this.stageConfig.tempoFase);
@@ -107,11 +107,11 @@ var stage2State = {
         Objeto1 a ser verificado se estão no mesmo espaço, Objeto2 da  verificação, Função para executar, Condição "null".
         Não vai ter condição para disparar a função então usa "null" e o "this" é o contexto da função.
       */
-      game.physics.arcade.overlap(this.player, this.coin, this.getCoin, null, this);
+      game.physics.arcade.overlap(this.player, this.coin, () => getCoin(this), null, this);
       // Informa que o Inimigo pode ter contato com o jogador para roubar moedas.
-      game.physics.arcade.overlap(this.player, this.inimigo1, this.loseCoin, null, this);
-      game.physics.arcade.overlap(this.player, this.inimigo2, this.loseCoin, null, this);
-      game.physics.arcade.overlap(this.player, this.inimigo3, this.loseCoin, null, this);
+      game.physics.arcade.overlap(this.player, this.inimigo1, () => loseCoin(this), null, this);
+      game.physics.arcade.overlap(this.player, this.inimigo2, () => loseCoin(this), null, this);
+      game.physics.arcade.overlap(this.player, this.inimigo3, () => loseCoin(this), null, this);
 
       // Inicia a função de movimentação do Inimigo.
       moveInimigo(this.mapa, this.inimigo1);
@@ -165,55 +165,4 @@ var stage2State = {
       }
     }
   },
-
-  /*
-    Função da coleta das moedas
-    Ela irá "coletar" a moeda, aumentar o valor da contagem e inserir outra moeda em outro local.
-  */
-  getCoin: function () {
-    // Guarda as coordenadas da moeda para emitir as particulas dela.
-    this.emitter.x = this.coin.position.x;
-    this.emitter.y = this.coin.position.y;
-    // Depois emite as partículas da moeda. 
-    // Parametros "( )": Gerar todas ao mesmo tempo "true", Duração, Intervalo (caso gerar seja "false") e Quantidade.
-    this.emitter.start(true, 500, null, 15);
-    // Toca o som da moeda ao pegar ela.
-    this.somCoin.play();
-    // Adiciona mais "1" a variável do contador
-    this.coins++;
-    // Atualiza o contador visual no jogo.
-    this.txtCoins.text = 'MOEDAS: ' + getText(this.coins);
-    // Atualiza o contador dos pontos. Cada moeda aqui vale "5" pontos.
-    game.global.score += 5;
-    // Atualiza o contador visual dos pontos no jogo.
-    this.txtPontos.text = 'PONTOS: ' + getText(game.global.score);
-    // Agora verifica SE a pontuação superou o record e caso seja verdade, atualiza o record também.
-    verificaRecord();
-
-    // Reposiciona a nova moeda no mapa
-    this.coin.position = newPosition(this.coinPositions);
-  },
-
-  /*
-    Função da perca das moedas para o inimigo
-    Ela irá "tomar" as moedas, diminuindo o valor da contagem ao tocar no inimigo.
-  */
-  loseCoin: function () {
-    // Toca o som de quando perde as moedas.
-    this.somLoseCoin.play();
-    // Agora verifica SE tem moedas e caso tenha executa a açao de perca das moedas.
-    if (this.coins > 0) {
-      // Guarda as coordenadas do jogador para emitir as particulas dele.
-      this.emitter.x = this.player.position.x;
-      this.emitter.y = this.player.position.y;
-      // Depois emite as partículas do personagem. 
-      // Parametros "( )": Gerar todas ao mesmo tempo "true", Duração, Intervalo (caso gerar seja "false") e Quantidade.
-      this.emitter.start(true, 500, null, 15);
-
-      // Zera as moedas, perde todas as moedas.
-      this.coins = 0;
-      // E atualiza o contados das moedas.
-      this.txtCoins.text = 'MOEDAS: ' + getText(this.coins);
-    }
-  }
 };

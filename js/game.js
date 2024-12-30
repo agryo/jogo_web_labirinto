@@ -225,7 +225,7 @@ function moveInimigo (mapaFase, inimigo) {
   Aqui a variável "emitter" recebe o emissor ".emitter()"  e adiciona ".add" ao jogo "game".
   Parametros -> "( )": Eixo X, Eixo Y e Quantidade máxima de partículas.
 */
-function geraParcicula () {
+function gerarParcicula () {
   emitter = game.add.emitter(0, 0, 15);
   // Adiciona a imagem a ser usada nas partículas.
   emitter.makeParticles('part');
@@ -617,4 +617,57 @@ function passaOuPerde(moedas, musica, proximaFase) {
       game.state.start('menu');
     }
   }, this); 
+}
+
+/*
+  Função da coleta das moedas
+  Ela irá "coletar" a moeda, aumentar o valor da contagem e inserir outra moeda em outro local.
+  A função recebe como parâmetro o contexto da fase atual "stageContext" que fica no lugar do "this." nos comandos.
+*/
+function getCoin (stageContext) {
+  // Guarda as coordenadas da moeda para emitir as particulas dela.
+  stageContext.emitter.x = stageContext.coin.position.x;
+  stageContext.emitter.y = stageContext.coin.position.y;
+  // Depois emite as partículas da moeda. 
+  // Parametros "( )": Gerar todas ao mesmo tempo "true", Duração, Intervalo (caso gerar seja "false") e Quantidade.
+  stageContext.emitter.start(true, 500, null, 15);
+  // Toca o som da moeda ao pegar ela.
+  stageContext.somCoin.play();
+  // Adiciona mais "1" a variável do contador
+  stageContext.coins++;
+  // Atualiza o contador visual no jogo.
+  stageContext.txtCoins.text = 'MOEDAS: ' + getText(stageContext.coins);
+  // Atualiza o contador dos pontos. Cada moeda aqui vale "5" pontos.
+  game.global.score += 5;
+  // Atualiza o contador visual dos pontos no jogo.
+  stageContext.txtPontos.text = 'PONTOS: ' + getText(game.global.score);
+  // Agora verifica SE a pontuação superou o record e caso seja verdade, atualiza o record também.
+  verificaRecord();
+
+  // Reposiciona a nova moeda no mapa
+  stageContext.coin.position = newPosition(stageContext.coinPositions);
+}
+
+/*
+  Função da perca das moedas para o inimigo
+  Ela irá "tomar" as moedas, diminuindo o valor da contagem ao tocar no inimigo.
+  A função recebe como parâmetro o contexto da fase atual "stageContext" que fica no lugar do "this." nos comandos.
+*/
+function loseCoin (stageContext) {
+  // Toca o som de quando perde as moedas.
+  stageContext.somLoseCoin.play();
+  // Agora verifica SE tem moedas e caso tenha executa a açao de perca das moedas.
+  if (stageContext.coins > 0) {
+    // Guarda as coordenadas do jogador para emitir as particulas dele.
+    stageContext.emitter.x = stageContext.player.position.x;
+    stageContext.emitter.y = stageContext.player.position.y;
+    // Depois emite as partículas do personagem. 
+    // Parametros "( )": Gerar todas ao mesmo tempo "true", Duração, Intervalo (caso gerar seja "false") e Quantidade.
+    stageContext.emitter.start(true, 500, null, 15);
+
+    // Zera as moedas, perde todas as moedas.
+    stageContext.coins = 0;
+    // E atualiza o contados das moedas.
+    stageContext.txtCoins.text = 'MOEDAS: ' + getText(stageContext.coins);
+  }
 }
