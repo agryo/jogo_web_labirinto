@@ -4,7 +4,7 @@ var stage2State = {
       Cria um Objeto com as configurações da fase.
       Parametros: Moedas da Fase, Tempo da Fase, Fator de Bonus da Fase.
     */
-    this.stageConfig = configFase(12, 110, 5);
+    this.stageConfig = configFase(11, 110, 5);
 
     /*
       Adiciona e iniciar a música do jogo já configurada.
@@ -28,14 +28,14 @@ var stage2State = {
     */
     this.mapa = [
       [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-			[1,0,0,0,0,0,1,3,0,0,0,0,0,3,1],
+			[1,3,0,0,0,3,1,3,0,0,0,0,0,3,1],
 			[1,0,1,3,1,0,1,1,0,1,1,1,1,0,1],
 			[1,0,1,1,1,0,2,0,0,1,3,1,0,0,1],
-			[1,0,0,0,0,0,1,1,3,1,0,0,0,1,1],
+			[1,3,0,0,0,0,1,1,3,1,0,0,0,1,1],
 			[1,1,0,1,0,0,3,1,1,1,0,1,0,1,1],
 			[1,0,0,1,0,0,0,0,0,0,0,1,3,0,1],
 			[1,0,1,1,0,1,1,0,1,1,0,1,1,0,1],
-			[1,0,3,0,0,1,3,0,3,1,0,0,0,0,1],
+			[1,3,0,0,0,1,3,0,3,1,0,0,0,3,1],
 			[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
     ];
 
@@ -56,7 +56,6 @@ var stage2State = {
     */
     this.inimigo1 = addInimigo(75, 75, 'enemy');
     this.inimigo2 = addInimigo(675, 425, 'enemy');
-    this.inimigo3 = addInimigo(275, 125, 'enemy');
 
     // Criar as Moedas no Jogo.
     this.coin = criarMoeda(this.coinPositions);      
@@ -111,12 +110,10 @@ var stage2State = {
       // Informa que o Inimigo pode ter contato com o jogador para roubar moedas.
       game.physics.arcade.overlap(this.player, this.inimigo1, () => loseCoin(this), null, this);
       game.physics.arcade.overlap(this.player, this.inimigo2, () => loseCoin(this), null, this);
-      game.physics.arcade.overlap(this.player, this.inimigo3, () => loseCoin(this), null, this);
 
       // Inicia a função de movimentação do Inimigo.
       moveInimigo(this.mapa, this.inimigo1);
       moveInimigo(this.mapa, this.inimigo2);
-      moveInimigo(this.mapa, this.inimigo3);
       // Inicia a função de movimentação do Jogador.
       movePlayer(this.controls, this.player);
 
@@ -139,7 +136,6 @@ var stage2State = {
         // Para os inimigos ao concluir a fase.
         pararInimigo(this.inimigo1);
         pararInimigo(this.inimigo2);
-        pararInimigo(this.inimigo3);
 
         // Para a moeda ao concluir a fase.
         pararMoeda(this.coin);
@@ -161,7 +157,7 @@ var stage2State = {
         }
 
         // Chama a função que verifica se passou ou perdeu. Parametros: Moedas Atuais, Música da Fase, Próxima Fase.
-        passaOuPerde(this.coins, this.music, 'end');
+        passaOuPerde(this.coins, this.music, 'stage3');
       }
     }
   },

@@ -1,16 +1,16 @@
-var stage1State = {
+var stage3State = {
   create: function () {
     /* 
       Cria um Objeto com as configurações da fase.
       Parametros: Moedas da Fase, Tempo da Fase, Fator de Bonus da Fase.
     */
-    this.stageConfig = configFase(8, 99, 5);
+    this.stageConfig = configFase(10, 120, 5);
 
     /*
       Adiciona e iniciar a música do jogo já configurada.
       Parametro: O string da ID da música da fase carregada no "load.js"
     */
-    this.music = adicionarMusica('somstage1');
+    this.music = adicionarMusica('somstage3');
     // Carrega o som do jogo ao pegar o item.
     this.somCoin = addSons('getitem');
     // Carrega o som de quando perde moedas.
@@ -28,16 +28,16 @@ var stage1State = {
     */
     this.mapa = [
       [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-      [1,3,0,0,0,3,1,3,0,0,0,0,0,3,1],
-      [1,0,1,1,0,1,1,1,1,1,0,1,1,0,1],
-      [1,0,1,3,0,1,3,0,0,1,0,3,1,0,1],
-      [1,0,1,0,1,1,1,1,0,1,0,1,1,0,1],
-      [1,0,0,0,0,1,0,2,0,0,0,0,0,0,1],
-      [1,0,1,3,0,0,0,0,1,0,1,3,1,0,1],
-      [1,0,1,1,1,1,0,1,1,0,1,1,1,0,1],
-      [1,3,0,0,3,1,0,3,1,0,0,0,0,3,1],
-      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    ];
+      [1,3,0,0,0,3,1,3,0,0,3,1,3,0,1],
+      [1,0,1,1,1,0,1,1,0,1,1,1,1,0,1],
+      [1,0,1,0,0,0,2,0,0,1,0,3,1,0,1],
+      [1,0,1,1,3,1,1,1,3,1,0,0,1,0,1],
+      [1,3,0,0,0,0,0,1,1,1,3,0,0,0,1],
+      [1,1,1,0,1,1,0,0,0,1,1,1,1,0,1],
+      [1,0,1,0,3,1,0,1,0,0,0,0,1,0,1],
+      [1,3,0,0,0,1,3,0,3,1,0,0,0,3,1],
+      [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+    ];           
 
     // Aqui a variável "blocks" vai receber a função que cria o grupo de blocos.
     this.blocks = addBlocos();
@@ -47,7 +47,7 @@ var stage1State = {
     this.player = adicionarPlayer(0, 0, 'player');
 
     // Chama a função que monta o mapa e os objetos da fase.
-    montarFase(this.mapa, 'block', this.blocks, this.coinPositions, this.player);
+    montarFase(this.mapa, 'blocka', this.blocks, this.coinPositions, this.player);
 
     /*
       Adicionar o Inimigo
@@ -56,9 +56,10 @@ var stage1State = {
     */
     this.inimigo1 = addInimigo(75, 75, 'enemy');
     this.inimigo2 = addInimigo(675, 425, 'enemy');
+    this.inimigo3 = addInimigo(275, 125, 'enemy');
 
-    // Criar as moedas do jogo.
-    this.coin = criarMoeda(this.coinPositions);
+    // Criar as Moedas no Jogo.
+    this.coin = criarMoeda(this.coinPositions);      
 
     /*
       Contador de moedas
@@ -94,7 +95,7 @@ var stage1State = {
     // Cria a variável "timer" que recebe a função que gera o cronometro.
     this.timer = cronometroFase(this.txtTempo);
   },
-
+  
   update: function () {
     // Condição para iniciar o jogo, SE a variável "this.stageConfig.onGame" for iniciar "true", então o jogo é iniciado.
     if (this.stageConfig.onGame) {
@@ -110,10 +111,12 @@ var stage1State = {
       // Informa que o Inimigo pode ter contato com o jogador para roubar moedas.
       game.physics.arcade.overlap(this.player, this.inimigo1, () => loseCoin(this), null, this);
       game.physics.arcade.overlap(this.player, this.inimigo2, () => loseCoin(this), null, this);
+      game.physics.arcade.overlap(this.player, this.inimigo3, () => loseCoin(this), null, this);
 
       // Inicia a função de movimentação do Inimigo.
       moveInimigo(this.mapa, this.inimigo1);
       moveInimigo(this.mapa, this.inimigo2);
+      moveInimigo(this.mapa, this.inimigo3);
       // Inicia a função de movimentação do Jogador.
       movePlayer(this.controls, this.player);
 
@@ -136,6 +139,7 @@ var stage1State = {
         // Para os inimigos ao concluir a fase.
         pararInimigo(this.inimigo1);
         pararInimigo(this.inimigo2);
+        pararInimigo(this.inimigo3);
 
         // Para a moeda ao concluir a fase.
         pararMoeda(this.coin);
@@ -157,8 +161,8 @@ var stage1State = {
         }
 
         // Chama a função que verifica se passou ou perdeu. Parametros: Moedas Atuais, Música da Fase, Próxima Fase.
-        passaOuPerde(this.coins, this.music, 'stage2');
+        passaOuPerde(this.coins, this.music, 'stage4');
       }
     }
-  }
+  },
 };

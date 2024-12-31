@@ -43,6 +43,8 @@ var loadState = {
     game.load.image('bg', 'img/bg.png');
     game.load.image('block', 'img/block.png');
     game.load.image('blockp', 'img/blockp.png');
+    game.load.image('blocka', 'img/blocka.png');
+    game.load.image('blockn', 'img/blockn.png');
     game.load.image('end', 'img/end.png');
     game.load.image('part', 'img/part.png');
 
@@ -58,7 +60,9 @@ var loadState = {
 
     // Carrega as músicas do jogo
     game.load.audio('somstage1', 'assets/bootsst1.ogg');
-    game.load.audio('somstage2', 'assets/dancedubberst2.ogg')
+    game.load.audio('somstage2', 'assets/dancedubberst2.ogg');
+    game.load.audio('somstage3', 'assets/countermove.ogg');
+    game.load.audio('somstage4', 'assets/cycles.ogg');
 
     // E aqui fica o carregamento dos Áudios do jogo
     game.load.audio('getitem', 'assets/getitem.ogg');
