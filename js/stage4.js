@@ -4,7 +4,7 @@ var stage4State = {
       Cria um Objeto com as configurações da fase.
       Parametros: Moedas da Fase, Tempo da Fase, Fator de Bonus da Fase.
     */
-    this.stageConfig = configFase(10, 150, 5);
+    this.stageConfig = configFase(15, 280, 5);
 
     /*
       Adiciona e iniciar a música do jogo já configurada.
@@ -109,6 +109,10 @@ var stage4State = {
         Não vai ter condição para disparar a função então usa "null" e o "this" é o contexto da função.
       */
       game.physics.arcade.overlap(this.player, this.coin, () => getCoin(this), null, this);
+      game.physics.arcade.overlap(this.inimigo1, this.coin, () => getCoinInimigo(this), null, this);
+      game.physics.arcade.overlap(this.inimigo2, this.coin, () => getCoinInimigo(this), null, this);
+      game.physics.arcade.overlap(this.inimigo3, this.coin, () => getCoinInimigo(this), null, this);
+      game.physics.arcade.overlap(this.inimigo4, this.coin, () => getCoinInimigo(this), null, this);
       // Informa que o Inimigo pode ter contato com o jogador para roubar moedas.
       game.physics.arcade.overlap(this.player, this.inimigo1, () => loseCoin(this), null, this);
       game.physics.arcade.overlap(this.player, this.inimigo2, () => loseCoin(this), null, this);

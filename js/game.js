@@ -673,3 +673,22 @@ function loseCoin (stageContext) {
     stageContext.txtCoins.text = 'MOEDAS: ' + getText(stageContext.coins);
   }
 }
+
+/*
+  Função da coleta das moedas pelo inimigo
+  Ela irá "coletar" a moeda e inserir outra moeda em outro local.
+  A função recebe como parâmetro o contexto da fase atual "stageContext" que fica no lugar do "this." nos comandos.
+*/
+function getCoinInimigo (stageContext) {
+  // Guarda as coordenadas da moeda para emitir as particulas dela.
+  stageContext.emitter.x = stageContext.coin.position.x;
+  stageContext.emitter.y = stageContext.coin.position.y;
+  // Depois emite as partículas da moeda. 
+  // Parametros "( )": Gerar todas ao mesmo tempo "true", Duração, Intervalo (caso gerar seja "false") e Quantidade.
+  stageContext.emitter.start(true, 500, null, 15);
+  // Toca o som da moeda ao pegar ela.
+  stageContext.somCoin.play();
+  
+  // Reposiciona a nova moeda no mapa
+  stageContext.coin.position = newPosition(stageContext.coinPositions);
+}
